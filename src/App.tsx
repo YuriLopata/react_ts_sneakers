@@ -1,14 +1,47 @@
-import React from "react";
-import { Card } from "./components/Card";
+import React, { useState } from "react";
+import { Card } from "./components/Card/Card";
 import { Header } from "./components/Header";
 import { Drawer } from "./components/Drawer";
 
+import { CardProps } from "./components/Card/Card";
+
+type CardInfo = {
+  title: string;
+  price: number;
+  imageUrl: string;
+};
+
+const arr: CardInfo[] = [
+  {
+    title: "Man's shoes Nike Blazer Mid Suede",
+    price: 129.99,
+    imageUrl: "./img/sneakers/1.jpg",
+  },
+  {
+    title: "Man's shoes Nike Air Max 270",
+    price: 149.99,
+    imageUrl: "./img/sneakers/2.jpg",
+  },
+  {
+    title: "Man's shoes Nike Blazer Mid Suede",
+    price: 84.99,
+    imageUrl: "./img/sneakers/3.jpg",
+  },
+  {
+    title: "Shoes Puma X Aka Boku Future Rider",
+    price: 88.99,
+    imageUrl: "./img/sneakers/4.jpg",
+  },
+];
+
 function App() {
+  const [cartOpened, setCartOpened] = useState(false);
+
   return (
     <div className="wrapper clear">
-      <Drawer />
+      {cartOpened && <Drawer onClose={() => setCartOpened(false)} />}
 
-      <Header />
+      <Header onClickCart={() => setCartOpened(true)} />
 
       <div className="content p-40">
         <div className="d-flex justify-between align-center mb-40">
@@ -22,64 +55,16 @@ function App() {
         </div>
 
         <div className="d-flex">
-          <Card />
-          <Card />
-          <Card />
-          <Card />
-
-          <div className="card">
-            <img width={133} height={112} src="./img/sneakers/2.jpg" alt="" />
-
-            <h5>Men's Shoes Nike Blazer Mid Suede</h5>
-
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column">
-                <span>Price:</span>
-
-                <b>$130.00</b>
-              </div>
-
-              <button className="button">
-                <img width={11} height={11} src="./img/add.svg" alt="" />
-              </button>
-            </div>
-          </div>
-
-          <div className="card">
-            <img width={133} height={112} src="./img/sneakers/3.jpg" alt="" />
-
-            <h5>Men's Shoes Nike Blazer Mid Suede</h5>
-
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column">
-                <span>Price:</span>
-
-                <b>$130.00</b>
-              </div>
-
-              <button className="button">
-                <img width={11} height={11} src="./img/add.svg" alt="" />
-              </button>
-            </div>
-          </div>
-
-          <div className="card">
-            <img width={133} height={112} src="./img/sneakers/4.jpg" alt="" />
-
-            <h5>Men's Shoes Nike Blazer Mid Suede</h5>
-
-            <div className="d-flex justify-between align-center">
-              <div className="d-flex flex-column">
-                <span>Price:</span>
-
-                <b>$130.00</b>
-              </div>
-
-              <button className="button">
-                <img width={11} height={11} src="./img/add.svg" alt="" />
-              </button>
-            </div>
-          </div>
+          {arr.map((obj: CardInfo, i: number) => (
+            <Card
+              key={i}
+              title={obj.title}
+              price={obj.price}
+              imageUrl={obj.imageUrl}
+              onClickFavorite={() => console.log("Added to favorite")}
+              onClickPlus={() => console.log("Added to cart")}
+            />
+          ))}
         </div>
       </div>
     </div>

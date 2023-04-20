@@ -1,4 +1,4 @@
-export default {
+{
     "env": {
         "browser": true,
         "es2021": true
@@ -16,6 +16,7 @@ export default {
         "sourceType": "module"
     },
     "plugins": [
+        "only-warn",
         "react",
         "@typescript-eslint"
     ],
