@@ -2,7 +2,7 @@ import React from "react";
 
 export const Header = (props: any) => {
   return (
-    <header className="d-flex justify-between align-center p-40">
+    <header className="d-flex justify-between align-center p-35">
       <div className="d-flex align-center">
         <img width={40} height={40} src="/img/logo.png" />
 

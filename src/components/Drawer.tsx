@@ -1,13 +1,13 @@
 import React from "react";
 
-export const Drawer = (props: any) => {
+export const Drawer = ({ onClose, items = [] }: any) => {
   return (
     <div className="overlay">
       <div className="drawer">
         <h2 className="d-flex justify-between mb-20">
           Cart
           <img
-            onClick={props.onClose}
+            onClick={onClose}
             className="btn-remove cu-p"
             src="./img/btn-remove.svg"
             alt="Close"
@@ -17,45 +17,31 @@ export const Drawer = (props: any) => {
         </h2>
 
         <div className="items">
-          <div className="cartItem d-flex align-center">
-            <img
-              src="./img/sneakers/1.jpg"
-              alt="Sneakers"
-              width={70}
-              height={70}
-            />
+          {items.map((obj: any, i: any) => (
+            <div key={i} className="cartItem d-flex align-center mr-10">
+              <img
+                key={i}
+                src={obj.imageUrl}
+                alt="Sneakers"
+                width={70}
+                height={70}
+              />
 
-            <div>
-              <p className="title">Man&apos;s shoes Nike Air Max 270</p>
+              <div>
+                <p key={i} className="title">
+                  {obj.title}
+                </p>
 
-              <b>$130.00</b>
+                <b key={i}>{obj.price}</b>
+              </div>
+
+              <img
+                className="btn-remove"
+                src="./img/btn-remove.svg"
+                alt="Remove"
+              />
             </div>
-
-            <img className="btn-remove" src="./img/btn-remove.svg" alt="" />
-          </div>
-
-          <div className="cartItem d-flex align-center">
-            <img
-              src="./img/sneakers/1.jpg"
-              alt="Sneakers"
-              width={70}
-              height={70}
-            />
-
-            <div>
-              <p className="title">Man&apos;s shoes Nike Air Max 270</p>
-
-              <b>$130.00</b>
-            </div>
-
-            <img
-              className="btn-remove"
-              src="./img/btn-remove.svg"
-              alt=""
-              width={32}
-              height={32}
-            />
-          </div>
+          ))}
         </div>
 
         <div className="cartTotal">
@@ -89,6 +75,7 @@ export const Drawer = (props: any) => {
           </button>
         </div>
       </div>
+      <div className="background" onClick={onClose}></div>
     </div>
   );
 };

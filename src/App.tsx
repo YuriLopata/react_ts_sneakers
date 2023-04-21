@@ -1,9 +1,7 @@
-import React, { useState } from "react";
-import { Card } from "./components/Card/Card";
+import React, { useState, useEffect } from "react";
+import { Card, CardProps } from "./components/Card/Card";
 import { Header } from "./components/Header";
 import { Drawer } from "./components/Drawer";
-
-import { CardProps } from "./components/Card/Card";
 
 type CardInfo = {
   title: string;
@@ -11,40 +9,35 @@ type CardInfo = {
   imageUrl: string;
 };
 
-const arr: CardInfo[] = [
-  {
-    title: "Man's shoes Nike Blazer Mid Suede",
-    price: 129.99,
-    imageUrl: "./img/sneakers/1.jpg",
-  },
-  {
-    title: "Man's shoes Nike Air Max 270",
-    price: 149.99,
-    imageUrl: "./img/sneakers/2.jpg",
-  },
-  {
-    title: "Man's shoes Nike Blazer Mid Suede",
-    price: 84.99,
-    imageUrl: "./img/sneakers/3.jpg",
-  },
-  {
-    title: "Shoes Puma X Aka Boku Future Rider",
-    price: 88.99,
-    imageUrl: "./img/sneakers/4.jpg",
-  },
-];
-
 function App() {
+  const [items, setItems] = useState([]);
+  const [cartItems, setCartItems] = useState<any>([]);
   const [cartOpened, setCartOpened] = useState(false);
+
+  useEffect(() => {
+    fetch("https://a31a20b3-b768-432c-8530-0c38622203cd.mock.pstmn.io/sneakers")
+      .then((res) => {
+        return res.json();
+      })
+      .then((json) => {
+        setItems(json);
+      });
+  }, []);
+
+  const onAddToCart = (obj: any) => {
+    setCartItems((prev: any) => [...prev, obj])
+  };
 
   return (
     <div className="wrapper clear">
-      {cartOpened && <Drawer onClose={() => setCartOpened(false)} />}
+      {cartOpened && (
+        <Drawer items={cartItems} onClose={() => setCartOpened(false)} />
+      )}
 
       <Header onClickCart={() => setCartOpened(true)} />
 
-      <div className="content p-40">
-        <div className="d-flex justify-between align-center mb-40">
+      <div className="content p-20">
+        <div className="head d-flex justify-between align-center">
           <h1>All sneakers</h1>
 
           <div className="search-block d-flex align-center">
@@ -54,15 +47,15 @@ function App() {
           </div>
         </div>
 
-        <div className="d-flex">
-          {arr.map((obj: CardInfo, i: number) => (
+        <div className="cards">
+          {items.map((item: CardInfo, i: number) => (
             <Card
               key={i}
-              title={obj.title}
-              price={obj.price}
-              imageUrl={obj.imageUrl}
+              title={item.title}
+              price={item.price}
+              imageUrl={item.imageUrl}
               onClickFavorite={() => console.log("Added to favorite")}
-              onClickPlus={() => console.log("Added to cart")}
+              onClickPlus={() => onAddToCart(item)}
             />
           ))}
         </div>
