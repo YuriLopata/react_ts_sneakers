@@ -10,21 +10,41 @@ export type CardProps = {
   onClickPlus: any;
 };
 
-export const Card = ({ title, price, imageUrl, onClickFavorite, onClickPlus }: CardProps) => {
-  const [isAdded, setIsAdded] = useState(false)
+export const Card: any = ({
+  title,
+  price,
+  imageUrl,
+  onClickFavorite,
+  onClickPlus,
+}: CardProps) => {
+  const [isAdded, setIsAdded] = useState<boolean>(false);
+  const [isFavorite, setIsFavorite] = useState<boolean>(false);
 
   const handleClickPlus = () => {
-    onClickPlus()
-    setIsAdded(prev => !prev)
-  }
-  
+    onClickPlus();
+    setIsAdded((prev: boolean) => !prev);
+  };
+
+  const handleClickFavorite = () => {
+    setIsFavorite((prev: boolean) => !prev);
+  };
+
   return (
     <div className={styles.card}>
-      <div className={styles.favorite} onClick={onClickFavorite}>
-        <img src="./img/heart-unliked.svg" alt="Unliked" />
+      <div className={styles.favorite} onClick={handleClickFavorite}>
+        <img
+          src={isFavorite ? "./img/liked.svg" : "./img/unliked.svg"}
+          alt=" Add to favorite"
+        />
       </div>
 
-      <img width={133} height={112} src={imageUrl} alt="" />
+      <img
+        className={styles.sneakersImg}
+        width={133}
+        height={112}
+        src={imageUrl}
+        alt="Sneakers"
+      />
 
       <div className="info">
         <h5>{title}</h5>
