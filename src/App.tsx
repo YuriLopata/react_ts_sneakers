@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, FC } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 
-import { Card } from "./components/Card/Card";
+import { Home } from "./pages/Home";
+import { Favorites } from "./pages/Favorites";
 import { Header } from "./components/Header";
 import { Drawer } from "./components/Drawer";
 
@@ -17,44 +18,89 @@ export type CardInfo = {
 //   data: CardInfo[];
 // }
 
-function App() {
+const App: FC = () => {
   const [items, setItems] = useState<[]>([]);
   const [cartItems, setCartItems] = useState<CardInfo[]>([]);
   const [favorites, setFavorites] = useState<CardInfo[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
   const [cartOpened, setCartOpened] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    axios
-      .get<any>(
+    async function fetchData() {
+      setIsLoading(true);
+
+      const cartResponse = await axios.get<any>(
+        "https://644155ed792fe886a8a4dd76.mockapi.io/cart"
+      );
+      const favoritesResponse = await axios.get<any>(
         "https://644155ed792fe886a8a4dd76.mockapi.io/items"
-        // https://run.mocky.io/v3/f9ef4bf1-4480-4e1c-ab5d-4d617b956ea0
-      )
-      .then((res) => {
-        setItems(res.data);
-      });
-    axios
-      .get<any>("https://644155ed792fe886a8a4dd76.mockapi.io/cart")
-      .then((res) => {
-        setCartItems(res.data);
-      });
+      );
+      const itemsResponse = await axios.get<any>(
+        "https://run.mocky.io/v3/0004d04a-ea7c-4c16-9c3d-9eadcef469a7"
+      );
+      
+      setIsLoading(false);
+
+      setCartItems(cartResponse.data);
+      setFavorites(favoritesResponse.data);
+      setItems(itemsResponse.data);
+    }
+
+    fetchData();
   }, []);
 
   const onAddToCart = (obj: CardInfo) => {
-    axios.post<any>("https://644155ed792fe886a8a4dd76.mockapi.io/cart", obj);
-    setCartItems((prev: CardInfo[]) => [...prev, obj]);
+    try {
+      if (
+        cartItems.find(
+          (cartItem: CardInfo) => Number(cartItem.id) === Number(obj.id)
+        )
+      ) {
+        console.log("delete", obj);
+
+        axios.delete(
+          `https://644155ed792fe886a8a4dd76.mockapi.io/cart/${obj.id}` // cart items
+        );
+        setCartItems((prev: CardInfo[]) =>
+          prev.filter((item) => Number(item.id) !== Number(obj.id))
+        );
+      } else {
+        console.log("post", obj);
+
+        axios.post<any>(
+          "https://644155ed792fe886a8a4dd76.mockapi.io/cart", // cart items
+          obj
+        );
+        setCartItems((prev: CardInfo[]) => [...prev, obj]);
+      }
+    } catch (error) {
+      alert("Failed to add to cart");
+    }
   };
 
-  const onAddToFavorite = (obj: CardInfo) => {
-    axios.post<any>(
-      "https://644155ed792fe886a8a4dd76.mockapi.io/favorites",
-      obj
-    );
-    setFavorites((prev: CardInfo[]) => [...prev, obj]);
+  const onAddToFavorite = async (obj: CardInfo) => {
+    console.log(obj);
+
+    try {
+      if (favorites.find((favObj) => favObj.id === obj.id)) {
+        axios.delete(
+          `https://644155ed792fe886a8a4dd76.mockapi.io/items/${obj.id}` // favorite items
+        );
+        return;
+      }
+      const { data } = await axios.post<any>(
+        "https://644155ed792fe886a8a4dd76.mockapi.io/items", // favorite items
+        obj
+      );
+      setFavorites((prev: CardInfo[]) => [...prev, data]);
+    } catch (error) {
+      alert("Failed to add to favorites");
+    }
   };
 
   const onRemoveCartItem = (id: number) => {
-    axios.delete(`https://644155ed792fe886a8a4dd76.mockapi.io/cart/${id}`);
+    axios.delete(`https://644155ed792fe886a8a4dd76.mockapi.io/cart/${id}`); // cart items
     setCartItems((prev) => prev.filter((item) => item.id !== id));
   };
 
@@ -82,65 +128,32 @@ function App() {
         <Route
           path="/"
           element={
-            <div className="content p-35">
-              <div className="head d-flex justify-between align-center">
-                <h1>
-                  {searchValue
-                    ? `Search results for the "${searchValue}"`
-                    : "All sneakers"}
-                </h1>
-
-                <div className="search-block d-flex align-center">
-                  <img
-                    className="mr-10"
-                    src="./img/search.svg"
-                    alt="Search"
-                    width={16}
-                    height={16}
-                  />
-
-                  <input
-                    onChange={onChangeSearchInput}
-                    value={searchValue}
-                    placeholder="Search"
-                  />
-
-                  {searchValue && (
-                    <img
-                      onClick={clearSearchValue}
-                      className="btn-clear"
-                      src="./img/btn-remove.svg"
-                      alt="Clear"
-                      width={20}
-                      height={20}
-                    />
-                  )}
-                </div>
-              </div>
-
-              <div className="cards">
-                {items
-                  .filter((item: CardInfo) =>
-                    item.title.toLowerCase().includes(searchValue.toLowerCase())
-                  )
-                  .map((item: CardInfo) => (
-                    <Card
-                      key={item.id}
-                      title={item.title}
-                      price={item.price}
-                      imageUrl={item.imageUrl}
-                      onClickPlus={() => onAddToCart(item)}
-                    />
-                  ))}
-              </div>
-            </div>
+            <Home
+              items={items}
+              cartItems={cartItems}
+              searchValue={searchValue}
+              onChangeSearchInput={onChangeSearchInput}
+              clearSearchValue={clearSearchValue}
+              onAddToCart={onAddToCart}
+              onAddToFavorite={onAddToFavorite}
+              isLoading={isLoading}
+            />
           }
         ></Route>
 
-        <Route path="/favorites" element={"Test!"}></Route>
+        <Route
+          path="/favorites"
+          element={
+            <Favorites
+              items={favorites}
+              onAddToCart={onAddToCart}
+              onAddToFavorite={onAddToFavorite}
+            />
+          }
+        ></Route>
       </Routes>
     </div>
   );
-}
+};
 
 export default App;

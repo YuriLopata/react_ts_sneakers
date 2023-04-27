@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 
 import { CardInfo } from "../App";
 
@@ -8,7 +8,7 @@ type DrawerProps = {
   onRemoveItem: any;
 };
 
-export const Drawer = ({ onClose, items = [], onRemoveItem }: DrawerProps) => {
+export const Drawer: FC<DrawerProps> = ({ onClose, items = [], onRemoveItem }) => {
   return (
     <div className="overlay">
       <div className="drawer">
@@ -33,7 +33,6 @@ export const Drawer = ({ onClose, items = [], onRemoveItem }: DrawerProps) => {
                   className="cartItem d-flex align-center mr-10"
                 >
                   <img
-                    key={obj.id}
                     src={obj.imageUrl}
                     alt="Sneakers"
                     width={70}
@@ -41,11 +40,11 @@ export const Drawer = ({ onClose, items = [], onRemoveItem }: DrawerProps) => {
                   />
 
                   <div>
-                    <p key={obj.id} className="title">
+                    <p className="title">
                       {obj.title}
                     </p>
 
-                    <b key={obj.id}>${obj.price}</b>
+                    <b>${obj.price}</b>
                   </div>
 
                   <img
