@@ -1,11 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useCallback } from "react";
 
 import { Card } from "../components/Card/Card";
 
 import { CardInfo } from "../App";
 
 type HomeProps = {
-  items: any;
+  items: CardInfo[];
   cartItems: any;
   searchValue: any;
   onChangeSearchInput: any;
@@ -26,25 +26,64 @@ export const Home: FC<HomeProps> = ({
   isLoading,
 }) => {
   const renderItems = () => {
-    const filteredItems = items.filter((item: CardInfo) =>
+    const filteredItems = items && items.filter((item: CardInfo) =>
       item.title.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    return (isLoading ? [...Array(8)] : filteredItems).map(
-      (item: CardInfo, index: number) => (
-        <Card
-          key={index}
-          onPlus={(obj: CardInfo) => onAddToCart(obj)}
-          onFavorite={onAddToFavorite}
-          favorited={false} // check
-          added={cartItems.some(
-            (obj: CardInfo) => Number(obj.id) === Number(item.id)
-          )}
-          loading={isLoading}
-          {...item}
-        />
-      )
+    const dummy = [
+      {
+      id: 1,
+      title: "Man's shoes Nike Blazer Mid Suede",
+      price: 0,
+      imageUrl: "./img/sneakers/1.jpg"
+      },
+      {
+      id: 2,
+      title: "Man's shoes Nike Blazer Mid Suede",
+      price: 0,
+      imageUrl: "./img/sneakers/1.jpg"
+      },
+      {
+      id: 3,
+      title: "Man's shoes Nike Blazer Mid Suede",
+      price: 0,
+      imageUrl: "./img/sneakers/1.jpg"
+      },
+      {
+      id: 4,
+      title: "Man's shoes Nike Blazer Mid Suede",
+      price: 0,
+      imageUrl: "./img/sneakers/1.jpg"
+      },
+    ]
+
+    const checkAdded = useCallback(
+      (itemId: number) => {
+        return cartItems.some(
+          (obj: CardInfo) => Number(obj.id) === Number(itemId)
+        );
+      },
+      [cartItems]
     );
+    
+    // console.log(isLoading);
+
+    const getItemsToRender = () => {
+      if (isLoading) return dummy;
+      return filteredItems;
+    };
+
+    return getItemsToRender().map((item: CardInfo) => (
+      (item && <Card
+        key={item.id}
+        onPlus={(obj: CardInfo) => onAddToCart(obj)}
+        onFavorite={onAddToFavorite}
+        favorited={false} // check
+        added={checkAdded(item.id)}
+        loading={isLoading}
+        {...item}
+      />)
+    ));
   };
 
   return (

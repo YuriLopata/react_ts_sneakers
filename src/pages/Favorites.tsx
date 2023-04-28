@@ -1,14 +1,19 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 import { CardInfo } from "../App";
 import { Card } from "../components/Card/Card";
+import {AppContext} from "../App";
 
 type FavoritesProps = {
-  items: any;
   onAddToCart: any;
   onAddToFavorite: any;
 };
 
-export const Favorites: FC<FavoritesProps> = ({items, onAddToCart, onAddToFavorite}) => {
+
+export const Favorites: FC<FavoritesProps> = ({onAddToCart, onAddToFavorite}) => {
+  const state = useContext(AppContext)
+
+  console.log(state);
+
   return (
     <div className="content p-35">
       <div className="head d-flex justify-between align-center">
@@ -16,7 +21,7 @@ export const Favorites: FC<FavoritesProps> = ({items, onAddToCart, onAddToFavori
       </div>
 
       <div className="cards">
-        {items
+        {[]
           .map((item: CardInfo) => (
             <Card
               key={item.id}

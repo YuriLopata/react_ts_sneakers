@@ -38,8 +38,8 @@ export const Card: FC<CardProps> = ({
     onFavorite({ id, title, imageUrl, price });
     setIsFavorite((prev: boolean) => !prev);
   };
-
-  console.log(isAdded);
+  
+  // console.log(loading);
   
   return (
     <div className={styles.card}>
@@ -89,7 +89,7 @@ export const Card: FC<CardProps> = ({
           <div className="info">
             <h5>{title}</h5>
 
-            <div className="d-flex justify-between align-center">
+            <div className="d-flex flex-wrap justify-between align-center">
               <div className="d-flex flex-column">
                 <span>Price:</span>
 
