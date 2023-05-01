@@ -1,18 +1,20 @@
 import React, { FC, useContext } from "react";
 import { CardInfo } from "../App";
 import { Card } from "../components/Card/Card";
-import {AppContext} from "../App";
+import { AppContext } from "../context/AppContext";
 
 type FavoritesProps = {
   onAddToCart: any;
   onAddToFavorite: any;
 };
 
+export const Favorites: FC<FavoritesProps> = ({
+  onAddToCart,
+  onAddToFavorite,
+}) => {
+  const { favorites } = useContext(AppContext);
 
-export const Favorites: FC<FavoritesProps> = ({onAddToCart, onAddToFavorite}) => {
-  const state = useContext(AppContext)
-
-  console.log(state);
+  console.log(favorites);
 
   return (
     <div className="content p-35">
@@ -21,18 +23,17 @@ export const Favorites: FC<FavoritesProps> = ({onAddToCart, onAddToFavorite}) =>
       </div>
 
       <div className="cards">
-        {[]
-          .map((item: CardInfo) => (
-            <Card
-              key={item.id}
-              onPlus={() => onAddToCart(item)}
-              onFavorite={onAddToFavorite}
-              favorited
-              added={false}
-              loading={false}
-              {...item}
-            />
-          ))}
+        {favorites.map((item: CardInfo) => (
+          <Card
+            key={item.id}
+            onPlus={() => onAddToCart(item)}
+            onFavorite={onAddToFavorite}
+            favorited
+            added={false}
+            loading={false}
+            {...item}
+          />
+        ))}
       </div>
     </div>
   );

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC, createContext } from "react";
+import React, { useState, useEffect, FC } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 
@@ -7,6 +7,8 @@ import { Favorites } from "./pages/Favorites";
 import { Header } from "./components/Header";
 import { Drawer } from "./components/Drawer";
 
+import { AppContext } from "./context/AppContext";
+
 export type CardInfo = {
   id: number;
   title: string;
@@ -14,14 +16,12 @@ export type CardInfo = {
   imageUrl: string;
 };
 
-export const AppContext = createContext({})
-
 // type GetCardResponse = {
 //   data: CardInfo[];
 // }
 
-const App: FC = () => {
-  const [items, setItems] = useState<[]>([]);
+const App: FC = (): any => {
+  const [items, setItems] = useState<CardInfo[]>([]);
   const [cartItems, setCartItems] = useState<CardInfo[]>([]);
   const [favorites, setFavorites] = useState<CardInfo[]>([]);
   const [searchValue, setSearchValue] = useState<string>("");
