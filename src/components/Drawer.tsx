@@ -29,7 +29,7 @@ export const Drawer: FC<DrawerProps> = ({ onClose, items = [], onRemoveItem }) =
             <div className="items">
               {items.map((obj: CardInfo) => (
                 <div
-                  key={obj.id}
+                  key={obj.cardId}
                   className="cartItem d-flex align-center mr-10"
                 >
                   <img
@@ -48,7 +48,7 @@ export const Drawer: FC<DrawerProps> = ({ onClose, items = [], onRemoveItem }) =
                   </div>
 
                   <img
-                    onClick={() => onRemoveItem(obj.id)}
+                    onClick={() => onRemoveItem(obj.cardId)}
                     className="btn-remove"
                     src="./img/btn-remove.svg"
                     alt="Remove"

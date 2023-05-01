@@ -25,11 +25,10 @@ export const Favorites: FC<FavoritesProps> = ({
       <div className="cards">
         {favorites.map((item: CardInfo) => (
           <Card
-            key={item.id}
+            key={item.cardId}
             onPlus={() => onAddToCart(item)}
             onFavorite={onAddToFavorite}
             favorited
-            added={false}
             loading={false}
             {...item}
           />

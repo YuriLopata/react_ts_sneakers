@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC } from "react";
+import React, { useState, useEffect, FC, useCallback } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 
@@ -10,7 +10,7 @@ import { Drawer } from "./components/Drawer";
 import { AppContext } from "./context/AppContext";
 
 export type CardInfo = {
-  id: number;
+  cardId: number;
   title: string;
   price: number;
   imageUrl: string;
@@ -37,7 +37,7 @@ const App: FC = (): any => {
         "https://644155ed792fe886a8a4dd76.mockapi.io/items"
       );
       const itemsResponse = await axios.get<any>(
-        "https://run.mocky.io/v3/0004d04a-ea7c-4c16-9c3d-9eadcef469a7"
+        "https://run.mocky.io/v3/f62c5f38-0006-4fb7-aafe-25ee599d7f58"
       );
       
       setIsLoading(false);
@@ -54,16 +54,16 @@ const App: FC = (): any => {
     try {
       if (
         cartItems.find(
-          (cartItem: CardInfo) => Number(cartItem.id) === Number(obj.id)
+          (cartItem: CardInfo) => Number(cartItem.cardId) === Number(obj.cardId)
         )
       ) {
-        console.log("delete", obj);
+        console.log("delete find", obj);
 
         axios.delete(
-          `https://644155ed792fe886a8a4dd76.mockapi.io/cart/${obj.id}` // cart items
+          `https://644155ed792fe886a8a4dd76.mockapi.io/cart/${obj.cardId}` // cart items
         );
         setCartItems((prev: CardInfo[]) =>
-          prev.filter((item) => Number(item.id) !== Number(obj.id))
+          prev.filter((item) => Number(item.cardId) !== Number(obj.cardId))
         );
       } else {
         console.log("post", obj);
@@ -83,9 +83,9 @@ const App: FC = (): any => {
     console.log(obj);
 
     try {
-      if (favorites.find((favObj) => favObj.id === obj.id)) {
+      if (favorites.find((favObj) => favObj.cardId === obj.cardId)) {
         axios.delete(
-          `https://644155ed792fe886a8a4dd76.mockapi.io/items/${obj.id}` // favorite items
+          `https://644155ed792fe886a8a4dd76.mockapi.io/items/${obj.cardId}` // favorite items
         );
         return;
       }
@@ -99,9 +99,9 @@ const App: FC = (): any => {
     }
   };
 
-  const onRemoveCartItem = (id: number) => {
-    axios.delete(`https://644155ed792fe886a8a4dd76.mockapi.io/cart/${id}`); // cart items
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
+  const onRemoveCartItem = (cardId: number) => {
+    axios.delete(`https://644155ed792fe886a8a4dd76.mockapi.io/cart/${cardId}`); // cart items
+    setCartItems((prev) => prev.filter((item) => item.cardId !== cardId));
   };
 
   const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -112,8 +112,21 @@ const App: FC = (): any => {
     setSearchValue("");
   };
 
+  const checkAdded = (cardId: number) => {
+    return cartItems.some((obj) => Number(obj.cardId) === Number(cardId))
+  }
+  
+  // const checkAdded = useCallback(
+  //   (itemId: number) => {
+  //     return cartItems.some(
+  //       (obj: CardInfo) => Number(obj.cardId) === Number(itemId)
+  //     );
+  //   },
+  //   [cartItems]
+  // );
+
   return (
-    <AppContext.Provider value={{ items, cartItems, favorites }}>
+    <AppContext.Provider value={{ items, cartItems, favorites, checkAdded }}>
       <div className="wrapper clear">
         {cartOpened && (
           <Drawer
@@ -131,7 +144,6 @@ const App: FC = (): any => {
             element={
               <Home
                 items={items}
-                cartItems={cartItems}
                 searchValue={searchValue}
                 onChangeSearchInput={onChangeSearchInput}
                 clearSearchValue={clearSearchValue}

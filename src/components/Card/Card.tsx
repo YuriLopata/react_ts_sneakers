@@ -1,41 +1,40 @@
-import React, { FC, useState } from "react";
+import React, { FC, useContext, useState } from "react";
 import ContentLoader from "react-content-loader";
+
+import { AppContext } from "../../context/AppContext";
 
 import styles from "./Card.module.scss";
 
 export type CardProps = {
-  id: number;
+  cardId: number;
   title: string;
   price: number;
   imageUrl: string;
   onPlus: any;
   onFavorite: any;
   favorited: boolean;
-  added: boolean;
   loading: boolean;
 };
 
 export const Card: FC<CardProps> = ({
-  id,
+  cardId,
   title,
   price,
   imageUrl,
   onPlus,
   onFavorite,
   favorited = false,
-  added = false,
   loading = false,
 }) => {
-  const [isAdded, setIsAdded] = useState<boolean>(added);
+  const { checkAdded } = useContext(AppContext);
   const [isFavorite, setIsFavorite] = useState<boolean>(favorited);
 
   const handleClickPlus = () => {
-    onPlus({ id, title, price, imageUrl });
-    setIsAdded((prev: boolean) => !prev);
+    onPlus({ cardId, title, price, imageUrl });
   };
 
   const handleClickFavorite = () => {
-    onFavorite({ id, title, imageUrl, price });
+    onFavorite({ cardId, title, imageUrl, price });
     setIsFavorite((prev: boolean) => !prev);
   };
   
@@ -101,7 +100,7 @@ export const Card: FC<CardProps> = ({
                 className={styles.plus}
                 width={32}
                 height={32}
-                src={isAdded ? "./img/btn-checked.svg" : "./img/btn-plus.svg"}
+                src={checkAdded(cardId) ? "./img/btn-checked.svg" : "./img/btn-plus.svg"}
                 alt="Plus"
               />
             </div>

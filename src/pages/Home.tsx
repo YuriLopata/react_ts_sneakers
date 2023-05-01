@@ -1,4 +1,4 @@
-import React, { FC, useCallback } from "react";
+import React, { FC } from "react";
 
 import { Card } from "../components/Card/Card";
 
@@ -6,7 +6,6 @@ import { CardInfo } from "../App";
 
 type HomeProps = {
   items: CardInfo[];
-  cartItems: any;
   searchValue: any;
   onChangeSearchInput: any;
   clearSearchValue: any;
@@ -15,9 +14,9 @@ type HomeProps = {
   isLoading: boolean;
 };
 
+
 export const Home: FC<HomeProps> = ({
   items,
-  cartItems,
   searchValue,
   onChangeSearchInput,
   clearSearchValue,
@@ -32,39 +31,30 @@ export const Home: FC<HomeProps> = ({
 
     const dummy = [
       {
-      id: 1,
+      cardId: 1,
       title: "Man's shoes Nike Blazer Mid Suede",
       price: 0,
       imageUrl: "./img/sneakers/1.jpg"
       },
       {
-      id: 2,
+      cardId: 2,
       title: "Man's shoes Nike Blazer Mid Suede",
       price: 0,
       imageUrl: "./img/sneakers/1.jpg"
       },
       {
-      id: 3,
+      cardId: 3,
       title: "Man's shoes Nike Blazer Mid Suede",
       price: 0,
       imageUrl: "./img/sneakers/1.jpg"
       },
       {
-      id: 4,
+      cardId: 4,
       title: "Man's shoes Nike Blazer Mid Suede",
       price: 0,
       imageUrl: "./img/sneakers/1.jpg"
       },
     ]
-
-    const checkAdded = useCallback(
-      (itemId: number) => {
-        return cartItems.some(
-          (obj: CardInfo) => Number(obj.id) === Number(itemId)
-        );
-      },
-      [cartItems]
-    );
     
     // console.log(isLoading);
 
@@ -75,11 +65,10 @@ export const Home: FC<HomeProps> = ({
 
     return getItemsToRender().map((item: CardInfo) => (
       (item && <Card
-        key={item.id}
+        key={item.cardId}
         onPlus={(obj: CardInfo) => onAddToCart(obj)}
         onFavorite={onAddToFavorite}
         favorited={false} // check
-        added={checkAdded(item.id)}
         loading={isLoading}
         {...item}
       />)
