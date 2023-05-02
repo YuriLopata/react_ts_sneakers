@@ -6,6 +6,7 @@
 img {
   max-width: 100%;
   height: auto;
+  user-select: none;
 }
 
 body {
@@ -75,7 +76,8 @@ header {
     border: none;
     margin-right: 10px;
     font-size: 16px;
-    
+    background: transparent;
+
     &::placeholder {
       color: #c4c4c4;
     }
@@ -136,9 +138,13 @@ header {
       margin-right: 20px;
     }
 
-    .title {
-      font-size: 14px;
-      margin: 0 12px 6px 0;
+    div {
+      flex: 1;
+
+      .title {
+        font-size: 14px;
+        margin: 0 12px 6px 0;
+      }
     }
 
     b {
@@ -202,22 +208,23 @@ header {
     width: 245px;
     margin-top: 20px;
 
-    &:hover, &:focus {
+    &:hover,
+    &:focus {
       background: lighten(#9dd558, 5%);
     }
-  
+
     &:hover .arrowLeft {
       left: 20px;
     }
-  
+
     &:focus .arrowLeft {
       left: 20px;
     }
-  
+
     &:active {
       background: darken(#9dd558, 8%);
     }
-  
+
     .arrowLeft {
       position: absolute;
       transform: rotate(180deg);
@@ -242,7 +249,32 @@ header {
   font-weight: 500;
   cursor: pointer;
 
-  &:hover, &:focus {
+  &:disabled {
+    background-color: #bebebe;
+
+    animation: button-loading 1s ease infinite;
+
+    &:hover,
+    &:focus {
+      background: #bebebe;
+      cursor: default;
+    }
+
+    &:hover .arrowRight {
+      right: 30px;
+    }
+
+    &:focus .arrowRight {
+      right: 30px;
+    }
+
+    &:active {
+      background: #bebebe;
+    }
+  }
+
+  &:hover,
+  &:focus {
     background: lighten(#9dd558, 5%);
   }
 
@@ -262,5 +294,19 @@ header {
     position: absolute;
     right: 30px;
     top: calc(50% - 7px);
+  }
+}
+
+@keyframes button-loading {
+  0% {
+    opacity: 1;
+  }
+  
+  50% {
+    opacity: 0.7;
+  }
+  
+  100% {
+    opacity: 1;
   }
 }

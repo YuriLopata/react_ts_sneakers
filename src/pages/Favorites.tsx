@@ -5,16 +5,19 @@ import { AppContext } from "../context/AppContext";
 
 type FavoritesProps = {
   onAddToCart: any;
-  onAddToFavorite: any;
+  onAddToFavorites: any;
+  isLoading: boolean;
 };
 
 export const Favorites: FC<FavoritesProps> = ({
   onAddToCart,
-  onAddToFavorite,
+  onAddToFavorites,
+  isLoading,
 }) => {
   const { favorites } = useContext(AppContext);
+  const { getItemsToRender } = useContext(AppContext);
 
-  console.log(favorites);
+  // console.log(favorites);
 
   return (
     <div className="content p-35">
@@ -23,13 +26,13 @@ export const Favorites: FC<FavoritesProps> = ({
       </div>
 
       <div className="cards">
-        {favorites.map((item: CardInfo) => (
+        {getItemsToRender(favorites).map((item: CardInfo) => (
           <Card
             key={item.cardId}
-            onPlus={() => onAddToCart(item)}
-            onFavorite={onAddToFavorite}
+            onPlus={(obj: CardInfo) => onAddToCart(obj)}
+            onFavorite={onAddToFavorites}
             favorited
-            loading={false}
+            loading={isLoading}
             {...item}
           />
         ))}

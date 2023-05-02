@@ -1,14 +1,54 @@
-import React, { FC } from "react";
+import React, { FC, useContext, useState } from "react";
+
+import { Info } from "./Info";
+import { AppContext } from "../context/AppContext";
 
 import { CardInfo } from "../App";
+import axios from "axios";
 
 type DrawerProps = {
-  onClose: any;
   items: CardInfo[];
+  onClose: any;
   onRemoveItem: any;
 };
 
-export const Drawer: FC<DrawerProps> = ({ onClose, items = [], onRemoveItem }) => {
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+export const Drawer: FC<DrawerProps> = ({
+  items = [],
+  onClose,
+  onRemoveItem,
+}) => {
+  const [isOrderCompleted, setIsOrderCompleted] = useState(false);
+  const [orderId, setOrderId] = useState(0);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { cartItems, setCartItems } = useContext(AppContext);
+
+  const onClickOrder = async () => {
+    try {
+      setIsLoading(true);
+      // const { data } = await axios.post(
+      //   "https://644155ed792fe886a8a4dd76.mockapi.io/orders",
+      //   { items: cartItems }
+      // );
+      // setOrderId(data.id);
+      setOrderId((prev: number) => prev + 1);
+      setIsOrderCompleted(true);
+
+      for (let i = 0; i < cartItems.length; i++) {
+        const item = cartItems[i];
+        await axios.delete(
+          "https://644155ed792fe886a8a4dd76.mockapi.io/cart/" + item.cardId
+        );
+        await delay(1000)
+      }
+    } catch (error) {
+      alert("Failed to place an order :(");
+    }
+    setIsLoading(false);
+  };
+
   return (
     <div className="overlay">
       <div className="drawer">
@@ -28,10 +68,7 @@ export const Drawer: FC<DrawerProps> = ({ onClose, items = [], onRemoveItem }) =
           <>
             <div className="items">
               {items.map((obj: CardInfo) => (
-                <div
-                  key={obj.cardId}
-                  className="cartItem d-flex align-center mr-10"
-                >
+                <div key={obj.cardId} className="cartItem d-flex align-center">
                   <img
                     src={obj.imageUrl}
                     alt="Sneakers"
@@ -40,9 +77,7 @@ export const Drawer: FC<DrawerProps> = ({ onClose, items = [], onRemoveItem }) =
                   />
 
                   <div>
-                    <p className="title">
-                      {obj.title}
-                    </p>
+                    <p className="title">{obj.title}</p>
 
                     <b>${obj.price}</b>
                   </div>
@@ -76,7 +111,11 @@ export const Drawer: FC<DrawerProps> = ({ onClose, items = [], onRemoveItem }) =
                 </li>
               </ul>
 
-              <button className="greenButton">
+              <button
+                onClick={onClickOrder}
+                disabled={isLoading}
+                className="greenButton"
+              >
                 Make an order
                 <img
                   className="arrowRight"
@@ -89,26 +128,21 @@ export const Drawer: FC<DrawerProps> = ({ onClose, items = [], onRemoveItem }) =
             </div>
           </>
         ) : (
-          <div className="cartEmpty d-flex align-center justify-center flex-column flex">
-            <img
-              className="mb-20"
-              src="./img/empty-cart.jpg"
-              alt="Cart is empty"
-              width={120}
-              height={120}
-            />
-
-            <h2>Cart is empty</h2>
-
-            <p className="opacity-6">
-              Add at least one pair of sneakers to make an order.
-            </p>
-
-            <button onClick={onClose} className="greenButton">
-              <img className="arrowLeft" src="./img/arrow.svg" alt="Arrow" />
-              Go back
-            </button>
-          </div>
+          <Info
+            img={
+              isOrderCompleted
+                ? "./img/complete-order.jpg"
+                : "./img/empty-cart.jpg"
+            }
+            title={
+              isOrderCompleted ? "The order has been placed" : "Cart is empty"
+            }
+            desc={
+              isOrderCompleted
+                ? `Your order ${orderId} will be delivered to courier delivery soon`
+                : "Add at least one pair of sneakers to make an order"
+            }
+          />
         )}
       </div>
       <div className="background" onClick={onClose}></div>

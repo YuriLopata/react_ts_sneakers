@@ -85,7 +85,7 @@ export const Card: FC<CardProps> = ({
             alt="Sneakers"
           />
 
-          <div className="info">
+          <div className={styles.info}>
             <h5>{title}</h5>
 
             <div className="d-flex flex-wrap justify-between align-center">

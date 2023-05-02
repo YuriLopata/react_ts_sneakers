@@ -1,6 +1,7 @@
-import React, { FC } from "react";
+import React, { FC, useContext } from "react";
 
 import { Card } from "../components/Card/Card";
+import { AppContext } from "../context/AppContext";
 
 import { CardInfo } from "../App";
 
@@ -10,10 +11,9 @@ type HomeProps = {
   onChangeSearchInput: any;
   clearSearchValue: any;
   onAddToCart: any;
-  onAddToFavorite: any;
+  onAddToFavorites: any;
   isLoading: boolean;
 };
-
 
 export const Home: FC<HomeProps> = ({
   items,
@@ -21,7 +21,7 @@ export const Home: FC<HomeProps> = ({
   onChangeSearchInput,
   clearSearchValue,
   onAddToCart,
-  onAddToFavorite,
+  onAddToFavorites,
   isLoading,
 }) => {
   const renderItems = () => {
@@ -29,45 +29,13 @@ export const Home: FC<HomeProps> = ({
       item.title.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    const dummy = [
-      {
-      cardId: 1,
-      title: "Man's shoes Nike Blazer Mid Suede",
-      price: 0,
-      imageUrl: "./img/sneakers/1.jpg"
-      },
-      {
-      cardId: 2,
-      title: "Man's shoes Nike Blazer Mid Suede",
-      price: 0,
-      imageUrl: "./img/sneakers/1.jpg"
-      },
-      {
-      cardId: 3,
-      title: "Man's shoes Nike Blazer Mid Suede",
-      price: 0,
-      imageUrl: "./img/sneakers/1.jpg"
-      },
-      {
-      cardId: 4,
-      title: "Man's shoes Nike Blazer Mid Suede",
-      price: 0,
-      imageUrl: "./img/sneakers/1.jpg"
-      },
-    ]
-    
-    // console.log(isLoading);
+    const { getItemsToRender } = useContext(AppContext);
 
-    const getItemsToRender = () => {
-      if (isLoading) return dummy;
-      return filteredItems;
-    };
-
-    return getItemsToRender().map((item: CardInfo) => (
+    return getItemsToRender(filteredItems).map((item: CardInfo) => (
       (item && <Card
-        key={item.cardId}
+        key={Number(item.cardId)}
         onPlus={(obj: CardInfo) => onAddToCart(obj)}
-        onFavorite={onAddToFavorite}
+        onFavorite={onAddToFavorites}
         favorited={false} // check
         loading={isLoading}
         {...item}
