@@ -20,7 +20,7 @@ export const Drawer: FC<DrawerProps> = ({
   onRemoveItem,
   opened,
 }) => {
-  const {cartItems, totalPrice} = useCart();
+  const {cartItems, setCartItems, totalPrice} = useCart();
   const [isOrderCompleted, setIsOrderCompleted] = useState(false);
   const [orderId, setOrderId] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
@@ -35,6 +35,7 @@ export const Drawer: FC<DrawerProps> = ({
       // setOrderId(data.id);
       setOrderId((prev: number) => prev + 1);
       setIsOrderCompleted(true);
+      setCartItems([])
 
       for (let i = 0; i < cartItems.length; i++) {
         const item = cartItems[i];
