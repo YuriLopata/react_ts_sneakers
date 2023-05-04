@@ -4,7 +4,7 @@ import { Routes, Route } from "react-router-dom";
 
 import { Home } from "./pages/Home";
 import { Favorites } from "./pages/Favorites";
-import { Header } from "./components/Header";
+import { Header } from "./components/Header/Header";
 import { Drawer } from "./components/Drawer/Drawer";
 
 import { AppContext } from "./context/AppContext";

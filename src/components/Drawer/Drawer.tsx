@@ -129,6 +129,7 @@ export const Drawer: FC<DrawerProps> = ({
           </>
         ) : (
           <Info
+          inCart
             img={
               isOrderCompleted
                 ? "./img/complete-order.jpg"

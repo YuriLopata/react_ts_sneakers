@@ -63,7 +63,7 @@ export const Card: FC<CardProps> = ({
           {onFavorite && <div className={styles.favorite}>
             <img
               onClick={handleClickFavorite}
-              src={isFavorite ? "./img/liked.svg" : "./img/unliked.svg"}
+              src={isFavorite ? "img/liked.svg" : "img/unliked.svg"}
               alt=" Add to favorite"
             />
           </div>}
@@ -91,7 +91,7 @@ export const Card: FC<CardProps> = ({
                 className={styles.plus}
                 width={32}
                 height={32}
-                src={checkAdded(id) ? "./img/btn-checked.svg" : "./img/btn-plus.svg"}
+                src={checkAdded(id) ? "img/btn-checked.svg" : "img/btn-plus.svg"}
                 alt="Plus"
               />}
             </div>

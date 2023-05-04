@@ -13,11 +13,9 @@ export const Favorites: FC<FavoritesProps> = ({
   const { favorites } = useContext(AppContext);
   const { getItemsToRender } = useContext(AppContext);
 
-  // console.log(favorites);
-
   return (
-    <div className="content p-35">
-      <div className="head d-flex justify-between align-center">
+    <div className="content">
+      <div className="title">
         <h1>My favorites</h1>
       </div>
 

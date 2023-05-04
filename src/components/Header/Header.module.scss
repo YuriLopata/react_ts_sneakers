@@ -1,0 +1,13 @@
+.header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 35px;
+    border-bottom: 1px solid #dadada;
+
+    h3,
+    p {
+        margin: 0;
+    }
+}

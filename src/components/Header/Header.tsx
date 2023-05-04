@@ -1,6 +1,8 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "../hooks/useCart";
+import { useCart } from "../../hooks/useCart";
+
+import styles from "./Header.module.scss"
 
 type HeaderProps = {
   onClickCart: any;
@@ -10,12 +12,12 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
   const {totalPrice} = useCart();
 
   return (
-    <header className="d-flex flex-wrap justify-between align-center p-35">
-      <Link to={"/"}>
+    <header className={styles.header}>
+      <Link to={""}>
         <div className="d-flex align-center">
-          <img className="mr-15" width={40} height={40} src="/img/logo.png" />
+          <img className="mr-15" width={40} height={40} src="img/logo.png" />
   
-          <div className="headerInfo">
+          <div>
             <h3 className="text-uppercase">React sneakers</h3>
   
             <p className="opacity-5">The best sneakers store</p>
@@ -28,12 +30,12 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
           onClick={onClickCart}
           className="d-flex align-center mr-30 cu-p"
         >
-          <img className="mr-10" width={18} height={18} src="/img/cart.svg" />
+          <img className="mr-10" width={18} height={18} src="img/cart.svg" />
 
           <span>{`$${totalPrice}`}</span>
         </li>
 
-        <Link to={"/favorites"}>
+        <Link to={"favorites"}>
           <li
             className="d-flex align-center mr-30 cu-p"
           >
@@ -41,7 +43,7 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
           </li>
         </Link>
 
-        <Link to={"/orders"}>
+        <Link to={"orders"}>
           <li className="d-flex align-center">
             <img width={20} height={20} src="./img/user.svg" />
           </li>

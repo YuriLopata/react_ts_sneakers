@@ -35,7 +35,7 @@ export const Home: FC<HomeProps> = ({
 
   return (
     <div className="content p-35">
-      <div className="head d-flex justify-between align-center">
+      <div className="title d-flex justify-between align-center">
         <h1>
           {searchValue
             ? `Search results for the "${searchValue}"`

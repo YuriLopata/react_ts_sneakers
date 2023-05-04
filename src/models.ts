@@ -45,3 +45,10 @@ export type OrdersProps = {
   onAddToCart: any;
   onAddToFavorites: any;
 };
+
+export type InfoProps = {
+  inCart: boolean;
+  img: string;
+  title: string;
+  desc: string;
+};

@@ -4,6 +4,7 @@ import { Card } from "../components/Card/Card";
 
 import { AppContext } from "../context/AppContext";
 import { OrdersProps } from "../models";
+import { Info } from "../components/Info/Info";
 // import axios from "axios";
 
 export const Orders: FC<OrdersProps> = ({ onAddToFavorites }) => {
@@ -22,7 +23,7 @@ export const Orders: FC<OrdersProps> = ({ onAddToFavorites }) => {
         // setIsLoading(false);
       } catch (error) {
         alert("Failed to get orders!");
-        console.error(error)
+        console.error(error);
       }
     }
 
@@ -31,23 +32,33 @@ export const Orders: FC<OrdersProps> = ({ onAddToFavorites }) => {
 
   // console.log(favorites);
 
-  return (
+  return orders.length > 0 ? (
     <div className="content p-35">
-      <div className="head d-flex justify-between align-center">
+      <div className="title d-flex justify-between align-center">
         <h1>My orders</h1>
       </div>
 
       <div className="cards">
-        {getItemsToRender(orders).map((item: CardInfo) => (
-          (item && <Card
-            key={Number(item.id)}
-            onFavorite={onAddToFavorites}
-            favorited={false}
-            loading={isLoading}
-            {...item}
-          />)
-        ))}
+        {getItemsToRender(orders).map(
+          (item: CardInfo) =>
+            item && (
+              <Card
+                key={Number(item.id)}
+                onFavorite={onAddToFavorites}
+                favorited={false}
+                loading={isLoading}
+                {...item}
+              />
+            )
+        )}
       </div>
     </div>
+  ) : (
+    <Info
+      inCart={false}
+      img={"./img/empty-cart.jpg"}
+      title={"You haven't made any orders yet"}
+      desc={"Click to choose your sneakers!"}
+    />
   );
 };
