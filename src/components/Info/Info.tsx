@@ -1,5 +1,7 @@
 import React, { useContext, FC } from "react";
-import { AppContext } from "../context/AppContext";
+import { AppContext } from "../../context/AppContext";
+
+import styles from "./Info.module.scss"
 
 type InfoProps = {
   img: string;
@@ -11,7 +13,7 @@ export const Info: FC<InfoProps> = ({img, title, desc}) => {
   const {setCartOpened} = useContext(AppContext)
 
   return (
-    <div className="cartEmpty d-flex align-center justify-center flex-column flex">
+    <div className={styles.cartEmpty}>
       <img
         className="mb-20"
         src={img}
@@ -26,8 +28,8 @@ export const Info: FC<InfoProps> = ({img, title, desc}) => {
         {desc}
       </p>
 
-      <button onClick={() => setCartOpened(false)} className="greenButton">
-        <img className="arrowLeft" src="./img/arrow.svg" alt="Arrow" />
+      <button onClick={() => setCartOpened(false)} className={styles.greenButton}>
+        <img className={styles.arrowLeft} src="./img/arrow.svg" alt="Arrow" />
         Go back
       </button>
     </div>

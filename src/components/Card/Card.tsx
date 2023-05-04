@@ -2,22 +2,12 @@ import React, { FC, useContext, useState } from "react";
 import ContentLoader from "react-content-loader";
 
 import { AppContext } from "../../context/AppContext";
+import { CardProps } from "../../models";
 
 import styles from "./Card.module.scss";
 
-export type CardProps = {
-  cardId: number;
-  title: string;
-  price: number;
-  imageUrl: string;
-  onPlus: any;
-  onFavorite: any;
-  favorited: boolean;
-  loading: boolean;
-};
-
 export const Card: FC<CardProps> = ({
-  cardId,
+  id,
   title,
   price,
   imageUrl,
@@ -28,13 +18,14 @@ export const Card: FC<CardProps> = ({
 }) => {
   const { checkAdded } = useContext(AppContext);
   const [isFavorite, setIsFavorite] = useState<boolean>(favorited);
+  const itemObj = { id, parentId: id, title, price, imageUrl }
 
   const handleClickPlus = () => {
-    onPlus({ cardId, title, price, imageUrl });
+    onPlus(itemObj);
   };
 
   const handleClickFavorite = () => {
-    onFavorite({ cardId, title, imageUrl, price });
+    onFavorite(itemObj);
     setIsFavorite((prev: boolean) => !prev);
   };
   
@@ -46,7 +37,7 @@ export const Card: FC<CardProps> = ({
         <ContentLoader
           speed={2}
           width={"100%"}
-          height={262}
+          height={"100%"}
           viewBox="0 0 138 262"
           backgroundColor="#f3f3f3"
           foregroundColor="#ecebeb"
@@ -69,13 +60,13 @@ export const Card: FC<CardProps> = ({
         </ContentLoader>
       ) : (
         <>
-          <div className={styles.favorite}>
+          {onFavorite && <div className={styles.favorite}>
             <img
               onClick={handleClickFavorite}
               src={isFavorite ? "./img/liked.svg" : "./img/unliked.svg"}
               alt=" Add to favorite"
             />
-          </div>
+          </div>}
 
           <img
             className={styles.sneakersImg}
@@ -95,14 +86,14 @@ export const Card: FC<CardProps> = ({
                 <b>${price}</b>
               </div>
 
-              <img
+              {onPlus && <img
                 onClick={handleClickPlus}
                 className={styles.plus}
                 width={32}
                 height={32}
-                src={checkAdded(cardId) ? "./img/btn-checked.svg" : "./img/btn-plus.svg"}
+                src={checkAdded(id) ? "./img/btn-checked.svg" : "./img/btn-plus.svg"}
                 alt="Plus"
-              />
+              />}
             </div>
           </div>
         </>

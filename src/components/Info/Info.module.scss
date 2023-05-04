@@ -1,0 +1,54 @@
+.cartEmpty {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+
+    p {
+        width: 280px;
+        line-height: 24px;
+    }
+
+    .greenButton {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #9dd558;
+        color: #fff;
+        padding: 18px;
+        border: none;
+        border-radius: 18px;
+        font-size: 16px;
+        font-weight: 500;
+        cursor: pointer;
+        width: 245px;
+        margin-top: 20px;
+
+        &:hover,
+        &:focus {
+            background: lighten(#9dd558, 5%);
+        }
+
+        &:hover .arrowLeft {
+            left: 20px;
+        }
+
+        &:focus .arrowLeft {
+            left: 20px;
+        }
+
+        &:active {
+            background: darken(#9dd558, 8%);
+        }
+
+        .arrowLeft {
+            position: absolute;
+            transform: rotate(180deg);
+            left: 30px;
+            top: calc(50% - 7px);
+        }
+    }
+}

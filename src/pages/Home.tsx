@@ -3,17 +3,7 @@ import React, { FC, useContext } from "react";
 import { Card } from "../components/Card/Card";
 import { AppContext } from "../context/AppContext";
 
-import { CardInfo } from "../App";
-
-type HomeProps = {
-  items: CardInfo[];
-  searchValue: any;
-  onChangeSearchInput: any;
-  clearSearchValue: any;
-  onAddToCart: any;
-  onAddToFavorites: any;
-  isLoading: boolean;
-};
+import { CardInfo, HomeProps } from "../models";
 
 export const Home: FC<HomeProps> = ({
   items,
@@ -33,7 +23,7 @@ export const Home: FC<HomeProps> = ({
 
     return getItemsToRender(filteredItems).map((item: CardInfo) => (
       (item && <Card
-        key={Number(item.cardId)}
+        key={Number(item.id)}
         onPlus={(obj: CardInfo) => onAddToCart(obj)}
         onFavorite={onAddToFavorites}
         favorited={false} // check

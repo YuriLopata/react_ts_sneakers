@@ -1,5 +1,5 @@
 import { createContext } from "react";
-import { CardInfo } from "../App";
+import { CardInfo } from "../models";
 
 interface IAppContext {
   items: CardInfo[];

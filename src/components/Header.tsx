@@ -1,11 +1,14 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
+import { useCart } from "../hooks/useCart";
 
 type HeaderProps = {
   onClickCart: any;
 };
 
 export const Header: FC<HeaderProps> = ({ onClickCart }) => {
+  const {totalPrice} = useCart();
+
   return (
     <header className="d-flex flex-wrap justify-between align-center p-35">
       <Link to={"/"}>
@@ -27,7 +30,7 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
         >
           <img className="mr-10" width={18} height={18} src="/img/cart.svg" />
 
-          <span>$130.00</span>
+          <span>{`$${totalPrice}`}</span>
         </li>
 
         <Link to={"/favorites"}>
@@ -38,9 +41,11 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
           </li>
         </Link>
 
-        <li className="d-flex align-center">
-          <img width={20} height={20} src="./img/user.svg" />
-        </li>
+        <Link to={"/orders"}>
+          <li className="d-flex align-center">
+            <img width={20} height={20} src="./img/user.svg" />
+          </li>
+        </Link>
       </ul>
     </header>
   );

@@ -1,16 +1,16 @@
-import React, { FC, useContext, useState } from "react";
-
-import { Info } from "./Info";
-import { AppContext } from "../context/AppContext";
-
-import { CardInfo } from "../App";
+import React, { FC, useState } from "react";
 import axios from "axios";
 
-type DrawerProps = {
-  items: CardInfo[];
-  onClose: any;
-  onRemoveItem: any;
-};
+import { Info } from "../Info/Info";
+
+import { CardInfo, DrawerProps } from "../../models";
+import { useCart } from "../../hooks/useCart";
+import styles from './Drawer.module.scss'
+
+
+const calcTax = (num: number) => {
+  return (num*0.05).toFixed(2)
+}
 
 const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
@@ -18,12 +18,12 @@ export const Drawer: FC<DrawerProps> = ({
   items = [],
   onClose,
   onRemoveItem,
+  opened,
 }) => {
+  const {cartItems, totalPrice} = useCart();
   const [isOrderCompleted, setIsOrderCompleted] = useState(false);
   const [orderId, setOrderId] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-
-  const { cartItems, setCartItems } = useContext(AppContext);
 
   const onClickOrder = async () => {
     try {
@@ -39,7 +39,7 @@ export const Drawer: FC<DrawerProps> = ({
       for (let i = 0; i < cartItems.length; i++) {
         const item = cartItems[i];
         await axios.delete(
-          "https://644155ed792fe886a8a4dd76.mockapi.io/cart/" + item.cardId
+          "https://644155ed792fe886a8a4dd76.mockapi.io/cart/" + item.id
         );
         await delay(1000)
       }
@@ -50,8 +50,8 @@ export const Drawer: FC<DrawerProps> = ({
   };
 
   return (
-    <div className="overlay">
-      <div className="drawer">
+    <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ''}`}>
+      <div className={styles.drawer}>
         <h2 className="d-flex justify-between mb-20">
           Cart
           <img
@@ -66,9 +66,9 @@ export const Drawer: FC<DrawerProps> = ({
 
         {items.length > 0 ? (
           <>
-            <div className="items">
+            <div className={styles.items}>
               {items.map((obj: CardInfo) => (
-                <div key={obj.cardId} className="cartItem d-flex align-center">
+                <div key={obj.id} className={styles.cartItem}>
                   <img
                     src={obj.imageUrl}
                     alt="Sneakers"
@@ -77,14 +77,14 @@ export const Drawer: FC<DrawerProps> = ({
                   />
 
                   <div>
-                    <p className="title">{obj.title}</p>
+                    <p className={styles.title}>{obj.title}</p>
 
                     <b>${obj.price}</b>
                   </div>
 
                   <img
-                    onClick={() => onRemoveItem(obj.cardId)}
-                    className="btn-remove"
+                    onClick={() => onRemoveItem(obj.id)}
+                    className={styles.btnRemove}
                     src="./img/btn-remove.svg"
                     alt="Remove"
                   />
@@ -92,14 +92,14 @@ export const Drawer: FC<DrawerProps> = ({
               ))}
             </div>
 
-            <div className="cartTotal">
+            <div className={styles.cartTotal}>
               <ul>
                 <li>
                   <span>Total:</span>
 
                   <div></div>
 
-                  <b>$260.00</b>
+                  <b>{`$${totalPrice}`}</b>
                 </li>
 
                 <li>
@@ -107,18 +107,18 @@ export const Drawer: FC<DrawerProps> = ({
 
                   <div></div>
 
-                  <b>$13.00</b>
+                  <b>{`$${calcTax(totalPrice)}`}</b>
                 </li>
               </ul>
 
               <button
                 onClick={onClickOrder}
                 disabled={isLoading}
-                className="greenButton"
+                className={styles.greenButton}
               >
                 Make an order
                 <img
-                  className="arrowRight"
+                  className={styles.arrowRight}
                   src="./img/arrow.svg"
                   alt="Arrow"
                   width={16}
@@ -145,7 +145,8 @@ export const Drawer: FC<DrawerProps> = ({
           />
         )}
       </div>
-      <div className="background" onClick={onClose}></div>
+      
+      <div className={styles.background} onClick={onClose}></div>
     </div>
   );
 };

@@ -5,16 +5,11 @@ import { Routes, Route } from "react-router-dom";
 import { Home } from "./pages/Home";
 import { Favorites } from "./pages/Favorites";
 import { Header } from "./components/Header";
-import { Drawer } from "./components/Drawer";
+import { Drawer } from "./components/Drawer/Drawer";
 
 import { AppContext } from "./context/AppContext";
-
-export type CardInfo = {
-  cardId: number;
-  title: string;
-  price: number;
-  imageUrl: string;
-};
+import { CardInfo } from "./models";
+import { Orders } from "./pages/Orders";
 
 // type GetCardResponse = {
 //   data: CardInfo[];
@@ -30,52 +25,77 @@ const App: FC = () => {
 
   useEffect(() => {
     async function fetchData() {
-      const cartResponse = await axios.get<any>(
-        "https://644155ed792fe886a8a4dd76.mockapi.io/cart"
-      );
-      const favoritesResponse = await axios.get<any>(
-        "https://644155ed792fe886a8a4dd76.mockapi.io/items"
-      );
-      const itemsResponse = await axios.get<any>(
-        "https://run.mocky.io/v3/f62c5f38-0006-4fb7-aafe-25ee599d7f58"
-      );
+      try {
+        const [cartResponse, favoritesResponse, itemsResponse] =
+          await Promise.all([
+            axios.get<any>("https://644155ed792fe886a8a4dd76.mockapi.io/cart"),
+            axios.get<any>("https://644155ed792fe886a8a4dd76.mockapi.io/items"),
+            axios.get<any>(
+              "https://run.mocky.io/v3/97087f60-9158-436c-87e6-0b64191e453c"
+            ),
+          ]);
 
-      setIsLoading(false);
+        setIsLoading(false);
 
-      setCartItems(cartResponse.data);
-      setFavorites(favoritesResponse.data);
-      setItems(itemsResponse.data);
+        setCartItems(cartResponse.data);
+        setFavorites(favoritesResponse.data);
+        setItems(itemsResponse.data);
+      } catch (error) {
+        alert("Failed to request data");
+        console.error(error);
+      }
     }
 
     fetchData();
   }, []);
 
-  const onAddToCart = (obj: CardInfo) => {
+  const onRemoveCartItem = (id: number) => {
     try {
-      if (
-        cartItems.find(
-          (cartItem: CardInfo) => Number(cartItem.cardId) === Number(obj.cardId)
-        )
-      ) {
-        console.log("delete find", obj);
+      axios.delete(`https://644155ed792fe886a8a4dd76.mockapi.io/cart/${id}`);
 
-        axios.delete(
-          `https://644155ed792fe886a8a4dd76.mockapi.io/cart/${Number(obj.cardId)}` // cart items
+      setCartItems((prev: CardInfo[]) =>
+        prev.filter((item) => Number(item.id) !== Number(id))
+      );
+    } catch (error) {
+      alert("Failed to remove from cart");
+      console.error(error);
+    }
+  };
+
+  const onAddToCart = async (obj: CardInfo) => {
+    const findItem = cartItems.find(
+      (cartItem: CardInfo) => Number(cartItem.parentId) === Number(obj.id)
+    );
+    try {
+      if (findItem) {
+        // console.log("delete: ", obj.id);
+
+        setCartItems((prev: any) =>
+          prev.filter((item: any) => Number(item.parentId) !== Number(obj.id))
         );
-        setCartItems((prev: CardInfo[]) =>
-          prev.filter((item) => Number(item.cardId) !== Number(obj.cardId))
+        await axios.delete(
+          `https://644155ed792fe886a8a4dd76.mockapi.io/cart/${findItem.id}`
         );
       } else {
-        console.log("post", obj);
+        // console.log("post", obj);
 
-        axios.post<any>(
-          "https://644155ed792fe886a8a4dd76.mockapi.io/cart", // cart items
+        setCartItems((prev: CardInfo[]) => [...prev, obj]);
+        const { data } = await axios.post<any>(
+          "https://644155ed792fe886a8a4dd76.mockapi.io/cart",
           obj
         );
-        setCartItems((prev: CardInfo[]) => [...prev, obj]);
+        setCartItems((prev: any) =>
+          prev.map((item: any) => {
+            if (item.parentId === data.parentId) {
+              return { ...item, id: data.id };
+            }
+            return item;
+          })
+        );
       }
     } catch (error) {
-      alert("Failed to add to cart");
+      alert("Failed to remove/add to cart");
+      console.error(error);
     }
   };
 
@@ -83,32 +103,28 @@ const App: FC = () => {
     try {
       if (
         favorites.find(
-          (favObj: CardInfo) => Number(favObj.cardId) === Number(obj.cardId)
+          (favObj: CardInfo) => Number(favObj.id) === Number(obj.id)
         )
       ) {
-        axios.delete(
-          `https://644155ed792fe886a8a4dd76.mockapi.io/items/${Number(obj.cardId)}` // favorite items
+        await axios.delete(
+          `https://644155ed792fe886a8a4dd76.mockapi.io/items/${Number(obj.id)}` // favorites
         );
         setFavorites(
           (
             prev: CardInfo[] // FIX! maybe create state is favorites page and save fav.items in it
-          ) => prev.filter((item) => Number(item.cardId) !== Number(obj.cardId))
+          ) => prev.filter((item) => Number(item.id) !== Number(obj.id))
         );
         return;
       }
       const { data } = await axios.post<any>(
-        "https://644155ed792fe886a8a4dd76.mockapi.io/items", // favorite items
+        "https://644155ed792fe886a8a4dd76.mockapi.io/items", // favorites
         obj
       );
       setFavorites((prev: CardInfo[]) => [...prev, data]);
     } catch (error) {
-      alert("Failed to add to favorites");
+      alert("Failed to remove/add to favorites");
+      console.error(error);
     }
-  };
-
-  const onRemoveCartItem = (cardId: number) => {
-    axios.delete(`https://644155ed792fe886a8a4dd76.mockapi.io/cart/${Number(cardId)}`); // cart items
-    setCartItems((prev) => prev.filter((item) => Number(item.cardId) !== Number(cardId)));
   };
 
   const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -119,48 +135,48 @@ const App: FC = () => {
     setSearchValue("");
   };
 
-  // const checkAdded = (cardId: number) => {
-  //   return cartItems.some((obj) => Number(obj.cardId) === Number(cardId))
-  // }
+  // const checkAdded = (id: number) => {
+  //   return cartItems.some((obj) => Number(obj.parentId) === Number(id));
+  // };
 
   const checkAdded = useCallback(
-    (itemId: number) => {
+    (id: number) => {
       return cartItems.some(
-        (obj: CardInfo) => Number(obj.cardId) === Number(itemId)
+        (obj: CardInfo) => Number(obj.parentId) === Number(id)
       );
     },
     [cartItems]
   );
 
-  const dummy = [
+  const fakeArr = [
     {
-      cardId: 1,
-      title: "Man's shoes Nike Blazer Mid Suede",
+      id: 1,
+      title: "",
       price: 0,
-      imageUrl: "./img/sneakers/1.jpg",
+      imageUrl: "",
     },
     {
-      cardId: 2,
-      title: "Man's shoes Nike Blazer Mid Suede",
+      id: 2,
+      title: "",
       price: 0,
-      imageUrl: "./img/sneakers/1.jpg",
+      imageUrl: "",
     },
     {
-      cardId: 3,
-      title: "Man's shoes Nike Blazer Mid Suede",
+      id: 3,
+      title: "",
       price: 0,
-      imageUrl: "./img/sneakers/1.jpg",
+      imageUrl: "",
     },
     {
-      cardId: 4,
-      title: "Man's shoes Nike Blazer Mid Suede",
+      id: 4,
+      title: "",
       price: 0,
-      imageUrl: "./img/sneakers/1.jpg",
+      imageUrl: "",
     },
   ];
 
-  const getItemsToRender = (arr: any) => {
-    if (isLoading) return dummy;
+  const getItemsToRender = (arr: []) => {
+    if (isLoading) return fakeArr;
     return arr;
   };
 
@@ -177,19 +193,18 @@ const App: FC = () => {
       }}
     >
       <div className="wrapper clear">
-        {cartOpened && (
-          <Drawer
-            items={cartItems}
-            onRemoveItem={onRemoveCartItem}
-            onClose={() => setCartOpened(false)}
-          />
-        )}
+        <Drawer
+          items={cartItems}
+          onRemoveItem={onRemoveCartItem}
+          onClose={() => setCartOpened(false)}
+          opened={cartOpened}
+        />
 
         <Header onClickCart={() => setCartOpened(true)} />
 
         <Routes>
           <Route
-            path="/"
+            path=""
             element={
               <Home
                 items={items}
@@ -204,12 +219,22 @@ const App: FC = () => {
           ></Route>
 
           <Route
-            path="/favorites"
+            path="favorites"
             element={
               <Favorites
                 onAddToCart={onAddToCart}
                 onAddToFavorites={onAddToFavorites}
                 isLoading={isLoading}
+              />
+            }
+          ></Route>
+
+          <Route
+            path="orders"
+            element={
+              <Orders
+                onAddToCart={onAddToCart}
+                onAddToFavorites={onAddToFavorites}
               />
             }
           ></Route>

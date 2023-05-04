@@ -1,13 +1,9 @@
 import React, { FC, useContext } from "react";
-import { CardInfo } from "../App";
+import { CardInfo } from "../models";
 import { Card } from "../components/Card/Card";
-import { AppContext } from "../context/AppContext";
 
-type FavoritesProps = {
-  onAddToCart: any;
-  onAddToFavorites: any;
-  isLoading: boolean;
-};
+import { AppContext } from "../context/AppContext";
+import { FavoritesProps } from "../models";
 
 export const Favorites: FC<FavoritesProps> = ({
   onAddToCart,
@@ -28,7 +24,7 @@ export const Favorites: FC<FavoritesProps> = ({
       <div className="cards">
         {getItemsToRender(favorites).map((item: CardInfo) => (
           <Card
-            key={item.cardId}
+            key={item.id}
             onPlus={(obj: CardInfo) => onAddToCart(obj)}
             onFavorite={onAddToFavorites}
             favorited
