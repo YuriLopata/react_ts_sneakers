@@ -59,10 +59,6 @@ header {
 .content {
   padding: 35px;
 
-  .title {
-    // margin-bottom: 35px;
-  }
-
   h1 {
     margin: 0;
   }
@@ -70,41 +66,55 @@ header {
 
 .title {
   flex-wrap: wrap;
-  margin-bottom: 40px;
+  margin-bottom: 35px;
+
+  @media screen and (max-width: 438px) {
+    margin-bottom: 20px;
+  }
 
   h1 {
-    margin-right: 10px;
+    margin-right: 20px;
     overflow: hidden;
     text-overflow: ellipsis;
     word-wrap: none;
-  }
-}
 
-.search-block {
-  min-width: 282px;
-  border: 1px solid #dadada;
-  padding: 12px;
-  border-radius: 10px;
-  overflow: hidden;
-
-  &:focus-within {
-    border: 1px solid #b1b1b1;
-  }
-
-  input {
-    width: 200px;
-    border: none;
-    margin-right: 10px;
-    font-size: 16px;
-    background: transparent;
-
-    &::placeholder {
-      color: #c4c4c4;
+    @media screen and (max-width: 438px) {
+      margin-bottom: 15px;
     }
   }
 
-  .btn-clear {
-    cursor: pointer;
+  .search-block {
+    flex: 1;
+    min-width: 108px;
+    max-width: 282px;
+    border: 1px solid #dadada;
+    padding: 12px;
+    border-radius: 10px;
+    overflow: hidden;
+
+    @media screen and (max-width: 438px) {
+      max-width: 100%;
+    }
+  
+    &:focus-within {
+      border: 1px solid #b1b1b1;
+    }
+  
+    input {
+      width: 282px;
+      border: none;
+      margin-right: 10px;
+      font-size: 16px;
+      background: transparent;
+  
+      &::placeholder {
+        color: #c4c4c4;
+      }
+    }
+  
+    .btn-clear {
+      cursor: pointer;
+    }
   }
 }
 
@@ -117,3 +127,4 @@ header {
     gap: 16px 16px;
   }
 }
+

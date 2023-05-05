@@ -33,7 +33,7 @@ export const Orders: FC<OrdersProps> = ({ onAddToFavorites }) => {
   // console.log(favorites);
 
   return orders.length > 0 ? (
-    <div className="content p-35">
+    <div className="content">
       <div className="title d-flex justify-between align-center">
         <h1>My orders</h1>
       </div>

@@ -6,6 +6,7 @@ interface IAppContext {
   cartItems: CardInfo[];
   favorites: CardInfo[];
   checkAdded: any;
+  checkFavorite: any;
   getItemsToRender: any;
   setCartOpened: any;
   setCartItems: any;
@@ -16,6 +17,7 @@ export const AppContext = createContext<IAppContext>({
   cartItems: [],
   favorites: [],
   checkAdded: () => [],
+  checkFavorite: () => [],
   getItemsToRender: () => [],
   setCartOpened: () => [],
   setCartItems: () => [],

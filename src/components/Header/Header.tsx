@@ -14,10 +14,10 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
   return (
     <header className={styles.header}>
       <Link to={""}>
-        <div className="d-flex align-center">
+        <div className={styles.logo}>
           <img className="mr-15" width={40} height={40} src="img/logo.png" />
   
-          <div>
+          <div className={styles.title}>
             <h3 className="text-uppercase">React sneakers</h3>
   
             <p className="opacity-5">The best sneakers store</p>
@@ -25,29 +25,31 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
         </div>
       </Link>
 
-      <ul className="d-flex align-center">
+      <ul className="d-flex align-center flex-wrap">
         <li
           onClick={onClickCart}
-          className="d-flex align-center mr-30 cu-p"
+          className={styles.cart}
         >
           <img className="mr-10" width={18} height={18} src="img/cart.svg" />
 
           <span>{`$${totalPrice}`}</span>
         </li>
 
-        <Link to={"favorites"}>
-          <li
-            className="d-flex align-center mr-30 cu-p"
-          >
-            <img src="./img/favorites.svg" alt="Heart" width={20} height={20} />
-          </li>
-        </Link>
-
-        <Link to={"orders"}>
-          <li className="d-flex align-center">
-            <img width={20} height={20} src="./img/user.svg" />
-          </li>
-        </Link>
+        <span className="d-flex align-center">
+          <Link to={"favorites"}>
+            <li
+              className="d-flex align-center ml-30"
+            >
+              <img src="./img/favorites.svg" alt="Heart" width={20} height={20} />
+            </li>
+          </Link>
+  
+          <Link to={"orders"}>
+            <li className="d-flex align-center ml-30">
+              <img width={20} height={20} src="./img/user.svg" />
+            </li>
+          </Link>
+        </span>
       </ul>
     </header>
   );

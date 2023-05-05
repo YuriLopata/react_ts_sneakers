@@ -23,10 +23,10 @@ export const Home: FC<HomeProps> = ({
 
     return getItemsToRender(filteredItems).map((item: CardInfo) => (
       (item && <Card
-        key={Number(item.id)}
+        key={item.id}
         onPlus={(obj: CardInfo) => onAddToCart(obj)}
         onFavorite={onAddToFavorites}
-        favorited={false} // check
+        favorited={false}
         loading={isLoading}
         {...item}
       />)

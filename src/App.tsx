@@ -31,14 +31,14 @@ const App: FC = () => {
             axios.get<any>("https://644155ed792fe886a8a4dd76.mockapi.io/cart"),
             axios.get<any>("https://644155ed792fe886a8a4dd76.mockapi.io/items"),
             axios.get<any>(
-              "https://run.mocky.io/v3/97087f60-9158-436c-87e6-0b64191e453c"
+              "https://run.mocky.io/v3/b25bbb75-b5d1-4d76-83b6-a2b0e2a95420"
             ),
           ]);
 
         setIsLoading(false);
 
-        setCartItems(cartResponse.data);
         setFavorites(favoritesResponse.data);
+        setCartItems(cartResponse.data);
         setItems(itemsResponse.data);
       } catch (error) {
         alert("Failed to request data");
@@ -68,8 +68,6 @@ const App: FC = () => {
     );
     try {
       if (findItem) {
-        // console.log("delete: ", obj.id);
-
         setCartItems((prev: any) =>
           prev.filter((item: any) => Number(item.parentId) !== Number(obj.id))
         );
@@ -77,8 +75,6 @@ const App: FC = () => {
           `https://644155ed792fe886a8a4dd76.mockapi.io/cart/${findItem.id}`
         );
       } else {
-        // console.log("post", obj);
-
         setCartItems((prev: CardInfo[]) => [...prev, obj]);
         const { data } = await axios.post<any>(
           "https://644155ed792fe886a8a4dd76.mockapi.io/cart",
@@ -111,7 +107,7 @@ const App: FC = () => {
         );
         setFavorites(
           (
-            prev: CardInfo[] // FIX! maybe create state is favorites page and save fav.items in it
+            prev: CardInfo[]
           ) => prev.filter((item) => Number(item.id) !== Number(obj.id))
         );
         return;
@@ -147,6 +143,22 @@ const App: FC = () => {
     },
     [cartItems]
   );
+
+  const checkFavorite = (id: number) => {
+    return favorites.some(
+      (obj: CardInfo) => Number(obj.parentId) === Number(id)
+    );
+  };
+
+  // const checkFavorite = useCallback(
+  //   (id: number) => {
+
+  //     return favorites.some(
+  //       (obj: CardInfo) => Number(obj.parentId) === Number(id)
+  //     );
+  //   },
+  //   [favorites]
+  // );
 
   const fakeArr = [
     {
@@ -187,6 +199,7 @@ const App: FC = () => {
         cartItems,
         favorites,
         checkAdded,
+        checkFavorite,
         getItemsToRender,
         setCartOpened,
         setCartItems,
