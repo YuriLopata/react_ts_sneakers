@@ -25,6 +25,10 @@ export type DrawerProps = {
   opened: boolean;
 };
 
+export type HeaderProps = {
+  onClickCart: any;
+};
+
 export type HomeProps = {
     items: CardInfo[];
     searchValue: any;

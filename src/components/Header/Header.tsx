@@ -3,10 +3,7 @@ import { Link } from "react-router-dom";
 import { useCart } from "../../hooks/useCart";
 
 import styles from "./Header.module.scss"
-
-type HeaderProps = {
-  onClickCart: any;
-};
+import { HeaderProps } from "../../models";
 
 export const Header: FC<HeaderProps> = ({ onClickCart }) => {
   const {totalPrice} = useCart();

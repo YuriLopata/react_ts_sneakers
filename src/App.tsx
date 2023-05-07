@@ -54,7 +54,7 @@ const App: FC = () => {
       axios.delete(`https://644155ed792fe886a8a4dd76.mockapi.io/cart/${id}`);
 
       setCartItems((prev: CardInfo[]) =>
-        prev.filter((item) => Number(item.id) !== Number(id))
+        prev.filter((item: CardInfo) => Number(item.id) !== Number(id))
       );
     } catch (error) {
       alert("Failed to remove from cart");
@@ -66,13 +66,15 @@ const App: FC = () => {
     const findItem = cartItems.find(
       (cartItem: CardInfo) => Number(cartItem.parentId) === Number(obj.id)
     );
+
     try {
       if (findItem) {
-        setCartItems((prev: any) =>
-          prev.filter((item: any) => Number(item.parentId) !== Number(obj.id))
-        );
         await axios.delete(
           `https://644155ed792fe886a8a4dd76.mockapi.io/cart/${findItem.id}`
+        );
+        
+        setCartItems((prev: CardInfo[]) =>
+          prev.filter((item: CardInfo) => Number(item.parentId) !== Number(obj.id))
         );
       } else {
         setCartItems((prev: CardInfo[]) => [...prev, obj]);
@@ -105,10 +107,8 @@ const App: FC = () => {
         await axios.delete(
           `https://644155ed792fe886a8a4dd76.mockapi.io/items/${Number(obj.id)}` // favorites
         );
-        setFavorites(
-          (
-            prev: CardInfo[]
-          ) => prev.filter((item) => Number(item.id) !== Number(obj.id))
+        setFavorites((prev: CardInfo[]) =>
+          prev.filter((item) => Number(item.id) !== Number(obj.id))
         );
         return;
       }
@@ -148,6 +148,10 @@ const App: FC = () => {
     return favorites.some(
       (obj: CardInfo) => Number(obj.parentId) === Number(id)
     );
+  };
+
+  const hideScrollbar = () => {
+    document.body.classList.toggle("hideScrollbar");
   };
 
   // const checkFavorite = useCallback(
@@ -192,6 +196,16 @@ const App: FC = () => {
     return arr;
   };
 
+  const onClickCart = () => {
+    setCartOpened(true);
+    hideScrollbar();
+  };
+
+  const onCloseCart = () => {
+    setCartOpened(false);
+    hideScrollbar()
+  }
+
   return (
     <AppContext.Provider
       value={{
@@ -209,11 +223,11 @@ const App: FC = () => {
         <Drawer
           items={cartItems}
           onRemoveItem={onRemoveCartItem}
-          onClose={() => setCartOpened(false)}
+          onClose={() => onCloseCart()}
           opened={cartOpened}
         />
 
-        <Header onClickCart={() => setCartOpened(true)} />
+        <Header onClickCart={onClickCart} />
 
         <Routes>
           <Route
