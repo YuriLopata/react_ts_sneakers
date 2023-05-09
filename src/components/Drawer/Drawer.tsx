@@ -4,15 +4,15 @@ import axios from "axios";
 import { Info } from "../Info/Info";
 
 import { CardInfo, DrawerProps } from "../../models";
-import { useCart } from "../../hooks/useCart";
-import styles from './Drawer.module.scss'
+import { IUseCart, useCart } from "../../hooks/useCart";
+import styles from "./Drawer.module.scss";
 
+const calcTax = (num: number): number => {
+  return Number((num * 0.05).toFixed(2));
+};
 
-const calcTax = (num: number) => {
-  return (num*0.05).toFixed(2)
-}
-
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+const delay = (ms: number): Promise<number> =>
+  new Promise((resolve) => setTimeout(resolve, ms));
 
 export const Drawer: FC<DrawerProps> = ({
   items = [],
@@ -20,14 +20,15 @@ export const Drawer: FC<DrawerProps> = ({
   onRemoveItem,
   opened,
 }) => {
-  const {cartItems, setCartItems, totalPrice} = useCart();
-  const [isOrderCompleted, setIsOrderCompleted] = useState(false);
-  const [orderId, setOrderId] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  const { cartItems, setCartItems, totalPrice }: IUseCart = useCart();
+  const [isOrderCompleted, setIsOrderCompleted] = useState<boolean>(false);
+  const [orderId, setOrderId] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const onClickOrder = async () => {
+  const onClickOrder = async (): Promise<void> => {
     try {
       setIsLoading(true);
+      // commented because it's impossible to create orders mock collection, but it works!
       // const { data } = await axios.post(
       //   "https://644155ed792fe886a8a4dd76.mockapi.io/orders",
       //   { items: cartItems }
@@ -35,14 +36,15 @@ export const Drawer: FC<DrawerProps> = ({
       // setOrderId(data.id);
       setOrderId((prev: number) => prev + 1);
       setIsOrderCompleted(true);
-      setCartItems([])
+      setCartItems([]);
 
       for (let i = 0; i < cartItems.length; i++) {
         const item = cartItems[i];
+        console.log(item.parentId);
         await axios.delete(
           "https://644155ed792fe886a8a4dd76.mockapi.io/cart/" + item.id
         );
-        await delay(1000)
+        await delay(500);
       }
     } catch (error) {
       alert("Failed to place an order :(");
@@ -51,7 +53,7 @@ export const Drawer: FC<DrawerProps> = ({
   };
 
   return (
-    <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ''}`}>
+    <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ""}`}>
       <div className={styles.drawer}>
         <h2 className="d-flex justify-between mb-20">
           Cart
@@ -69,7 +71,7 @@ export const Drawer: FC<DrawerProps> = ({
           <>
             <div className={styles.items}>
               {items.map((obj: CardInfo) => (
-                <div key={obj.id} className={styles.cartItem}>
+                <div key={obj.parentId} className={styles.cartItem}>
                   <img
                     src={obj.imageUrl}
                     alt="Sneakers"
@@ -130,7 +132,7 @@ export const Drawer: FC<DrawerProps> = ({
           </>
         ) : (
           <Info
-          inCart
+            inCart
             img={
               isOrderCompleted
                 ? "./img/complete-order.jpg"
@@ -147,7 +149,7 @@ export const Drawer: FC<DrawerProps> = ({
           />
         )}
       </div>
-      
+
       <div className={styles.background} onClick={onClose}></div>
     </div>
   );

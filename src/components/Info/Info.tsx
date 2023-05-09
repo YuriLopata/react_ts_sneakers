@@ -1,13 +1,13 @@
 import React, { useContext, FC } from "react";
 
-import { AppContext } from "../../context/AppContext";
+import { AppContext, IAppContext } from "../../context/AppContext";
 import { InfoProps } from "../../models";
 
 import styles from "./Info.module.scss";
 import { Link } from "react-router-dom";
 
 export const Info: FC<InfoProps> = ({ inCart, img, title, desc }) => {
-  const { setCartOpened } = useContext(AppContext);
+  const { setCartOpened }: IAppContext = useContext(AppContext);
 
   return (
     <div className={styles.cartEmpty}>

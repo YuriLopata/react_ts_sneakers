@@ -1,8 +1,8 @@
-import React, { FC, useContext, useState } from "react";
+import React, { FC, useContext } from "react";
 import ContentLoader from "react-content-loader";
 
-import { AppContext } from "../../context/AppContext";
-import { CardProps } from "../../models";
+import { AppContext, IAppContext } from "../../context/AppContext";
+import { CardInfo, CardProps } from "../../models";
 
 import styles from "./Card.module.scss";
 
@@ -14,25 +14,18 @@ export const Card: FC<CardProps> = ({
   imageUrl,
   onPlus,
   onFavorite,
-  favorited = false,
   loading = false,
 }) => {
-  const { checkAdded, checkFavorite } = useContext(AppContext);
-  const [isFavorite, setIsFavorite] = useState<boolean>(favorited);
-  const itemObj = { id, parentId, title, price, imageUrl };
+  const { cartItems, favorites, checkAdded }: IAppContext = useContext(AppContext);
+  const itemObj: CardInfo = { id, parentId, title, price, imageUrl };
 
-  const toggleLikeImg = checkFavorite(itemObj.parentId)
+  const toggleLikeImg = checkAdded(itemObj.parentId, favorites)
   ? "img/liked.svg"
   : "img/unliked.svg"
 
-  const handleClickPlus = () => {
-    onPlus(itemObj);
-  };
-
-  const handleClickFavorite = () => {
-    onFavorite(itemObj);
-    setIsFavorite((prev: boolean) => !prev);
-  };
+  const toggleAddedImg = checkAdded(itemObj.parentId, cartItems)
+  ? "img/btn-checked.svg"
+  : "img/btn-plus.svg"
 
   return (
     <div className={styles.card}>
@@ -67,10 +60,8 @@ export const Card: FC<CardProps> = ({
           {onFavorite && (
             <div className={styles.favorite}>
               <img
-                onClick={handleClickFavorite}
-                src={
-                  isFavorite ? "img/liked.svg" : toggleLikeImg
-                }
+                onClick={() => onFavorite(itemObj)}
+                src={toggleLikeImg}
                 alt="Add to favorite"
               />
             </div>
@@ -96,15 +87,11 @@ export const Card: FC<CardProps> = ({
 
               {onPlus && (
                 <img
-                  onClick={handleClickPlus}
+                  onClick={() => onPlus(itemObj)}
                   className={styles.plus}
                   width={32}
                   height={32}
-                  src={
-                    checkAdded(itemObj.parentId)
-                      ? "img/btn-checked.svg"
-                      : "img/btn-plus.svg"
-                  }
+                  src={toggleAddedImg}
                   alt="Plus"
                 />
               )}

@@ -1,12 +1,12 @@
 import React, { FC } from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "../../hooks/useCart";
+import { IUseCart, useCart } from "../../hooks/useCart";
 
 import styles from "./Header.module.scss"
 import { HeaderProps } from "../../models";
 
 export const Header: FC<HeaderProps> = ({ onClickCart }) => {
-  const {totalPrice} = useCart();
+  const {totalPrice}: IUseCart = useCart();
 
   return (
     <header className={styles.header}>

@@ -1,7 +1,7 @@
 import React, { FC, useContext } from "react";
 
 import { Card } from "../components/Card/Card";
-import { AppContext } from "../context/AppContext";
+import { AppContext, IAppContext } from "../context/AppContext";
 
 import { CardInfo, HomeProps } from "../models";
 
@@ -15,18 +15,17 @@ export const Home: FC<HomeProps> = ({
   isLoading,
 }) => {
   const renderItems = () => {
-    const filteredItems = items && items.filter((item: CardInfo) =>
+    const filteredItems: CardInfo[] = items?.filter((item: CardInfo) =>
       item.title.toLowerCase().includes(searchValue.toLowerCase())
     );
 
-    const { getItemsToRender } = useContext(AppContext);
+    const { getItemsToRender }: IAppContext = useContext(AppContext);
 
     return getItemsToRender(filteredItems).map((item: CardInfo) => (
       (item && <Card
         key={item.id}
         onPlus={(obj: CardInfo) => onAddToCart(obj)}
         onFavorite={onAddToFavorites}
-        favorited={false}
         loading={isLoading}
         {...item}
       />)
@@ -34,8 +33,8 @@ export const Home: FC<HomeProps> = ({
   };
 
   return (
-    <div className="content p-35">
-      <div className="title d-flex justify-between align-center">
+    <div className="content">
+      <div className="head">
         <h1>
           {searchValue
             ? `Search results for the "${searchValue}"`

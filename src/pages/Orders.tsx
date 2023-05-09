@@ -10,12 +10,13 @@ import { Info } from "../components/Info/Info";
 export const Orders: FC<OrdersProps> = ({ onAddToFavorites }) => {
   //   const { favorites, getItemsToRender } = useContext(AppContext);
   const { getItemsToRender } = useContext(AppContext);
-  const [orders, setOrders] = useState<[]>([]);
+  const [orders, setOrders] = useState<CardInfo[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData(): Promise<void> {
       try {
+        // commented because it's impossible to create orders mock collection, but it works!
         // const { data } = await axios.get(
         //   "https://644155ed792fe886a8a4dd76.mockapi.io/orders"
         // );
@@ -30,11 +31,9 @@ export const Orders: FC<OrdersProps> = ({ onAddToFavorites }) => {
     fetchData();
   }, []);
 
-  // console.log(favorites);
-
   return orders.length > 0 ? (
     <div className="content">
-      <div className="title d-flex justify-between align-center">
+      <div className="head">
         <h1>My orders</h1>
       </div>
 
@@ -43,7 +42,7 @@ export const Orders: FC<OrdersProps> = ({ onAddToFavorites }) => {
           (item: CardInfo) =>
             item && (
               <Card
-                key={Number(item.id)}
+                key={item.id}
                 onFavorite={onAddToFavorites}
                 favorited={false}
                 loading={isLoading}

@@ -2,7 +2,7 @@ import React, { FC, useContext } from "react";
 import { CardInfo } from "../models";
 import { Card } from "../components/Card/Card";
 
-import { AppContext } from "../context/AppContext";
+import { AppContext, IAppContext } from "../context/AppContext";
 import { FavoritesProps } from "../models";
 
 export const Favorites: FC<FavoritesProps> = ({
@@ -10,12 +10,11 @@ export const Favorites: FC<FavoritesProps> = ({
   onAddToFavorites,
   isLoading,
 }) => {
-  const { favorites } = useContext(AppContext);
-  const { getItemsToRender } = useContext(AppContext);
+  const { favorites, getItemsToRender }: IAppContext = useContext(AppContext);
 
   return (
     <div className="content">
-      <div className="title">
+      <div className="head">
         <h1>My favorites</h1>
       </div>
 

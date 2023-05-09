@@ -1,3 +1,5 @@
+import { MouseEventHandler } from "react";
+
 export type CardInfo = {
   id: number;
   parentId?: number;
@@ -12,42 +14,42 @@ export type CardProps = {
   title: string;
   price: number;
   imageUrl: string;
-  onPlus?: any;
-  onFavorite?: any;
+  onPlus?: (obj: CardInfo) => CardInfo | Promise<void>;
+  onFavorite?: (obj: CardInfo) => CardInfo | Promise<void>;
   favorited?: boolean;
   loading?: boolean;
 };
 
 export type DrawerProps = {
   items: CardInfo[];
-  onClose: any;
-  onRemoveItem: any;
+  onClose: MouseEventHandler<HTMLElement>;
+  onRemoveItem: (id: number) => void;
   opened: boolean;
 };
 
 export type HeaderProps = {
-  onClickCart: any;
+  onClickCart: MouseEventHandler<HTMLElement>;
 };
 
 export type HomeProps = {
-    items: CardInfo[];
-    searchValue: any;
-    onChangeSearchInput: any;
-    clearSearchValue: any;
-    onAddToCart: any;
-    onAddToFavorites: any;
-    isLoading: boolean;
-  };
-  
+  items: CardInfo[];
+  searchValue: string;
+  onChangeSearchInput: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  clearSearchValue: () => void;
+  onAddToCart: (obj: CardInfo) => CardInfo | Promise<void>;
+  onAddToFavorites: (obj: CardInfo) => CardInfo | Promise<void>;
+  isLoading: boolean;
+};
+
 export type FavoritesProps = {
-  onAddToCart: any;
-  onAddToFavorites: any;
+  onAddToCart: (obj: CardInfo) => CardInfo | Promise<void>;
+  onAddToFavorites: (obj: CardInfo) => CardInfo | Promise<void>;
   isLoading: boolean;
 };
 
 export type OrdersProps = {
-  onAddToCart: any;
-  onAddToFavorites: any;
+  onAddToCart: (obj: CardInfo) => CardInfo | Promise<void>;
+  onAddToFavorites: (obj: CardInfo) => CardInfo | Promise<void>;
 };
 
 export type InfoProps = {
@@ -56,3 +58,17 @@ export type InfoProps = {
   title: string;
   desc: string;
 };
+
+export type GetCardResponse = {
+  data: CardInfo[];
+};
+
+export type CreateCardResponse = {
+  id: number;
+  parentId?: number;
+  title: string;
+  price: number;
+  imageUrl: string;
+};
+
+export type DeleteCardResponse = '';

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, FC, useCallback } from "react";
+import React, { useState, useEffect, FC } from "react";
 import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 
@@ -8,12 +8,13 @@ import { Header } from "./components/Header/Header";
 import { Drawer } from "./components/Drawer/Drawer";
 
 import { AppContext } from "./context/AppContext";
-import { CardInfo } from "./models";
+import {
+  CardInfo,
+  CreateCardResponse,
+  DeleteCardResponse,
+  GetCardResponse,
+} from "./models";
 import { Orders } from "./pages/Orders";
-
-// type GetCardResponse = {
-//   data: CardInfo[];
-// }
 
 const App: FC = () => {
   const [items, setItems] = useState<CardInfo[]>([]);
@@ -24,16 +25,19 @@ const App: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    async function fetchData() {
+    async function fetchData(): Promise<void> {
       try {
-        const [cartResponse, favoritesResponse, itemsResponse] =
-          await Promise.all([
-            axios.get<any>("https://644155ed792fe886a8a4dd76.mockapi.io/cart"),
-            axios.get<any>("https://644155ed792fe886a8a4dd76.mockapi.io/items"),
-            axios.get<any>(
-              "https://run.mocky.io/v3/b25bbb75-b5d1-4d76-83b6-a2b0e2a95420"
-            ),
-          ]);
+        const [
+          cartResponse,
+          favoritesResponse,
+          itemsResponse,
+        ]: GetCardResponse[] = await Promise.all<GetCardResponse>([
+          axios.get("https://644155ed792fe886a8a4dd76.mockapi.io/cart"),
+          axios.get("https://644155ed792fe886a8a4dd76.mockapi.io/items"),
+          axios.get(
+            "https://run.mocky.io/v3/b25bbb75-b5d1-4d76-83b6-a2b0e2a95420"
+          ),
+        ]);
 
         setIsLoading(false);
 
@@ -49,9 +53,11 @@ const App: FC = () => {
     fetchData();
   }, []);
 
-  const onRemoveCartItem = (id: number) => {
+  const onRemoveCartItem = (id: number): void => {
     try {
-      axios.delete(`https://644155ed792fe886a8a4dd76.mockapi.io/cart/${id}`);
+      axios.delete<DeleteCardResponse>(
+        `https://644155ed792fe886a8a4dd76.mockapi.io/cart/${id}`
+      );
 
       setCartItems((prev: CardInfo[]) =>
         prev.filter((item: CardInfo) => Number(item.id) !== Number(id))
@@ -62,8 +68,8 @@ const App: FC = () => {
     }
   };
 
-  const onAddToCart = async (obj: CardInfo) => {
-    const findItem = cartItems.find(
+  const onAddToCart = async (obj: CardInfo): Promise<void> => {
+    const findItem: CardInfo | undefined = cartItems.find(
       (cartItem: CardInfo) => Number(cartItem.parentId) === Number(obj.id)
     );
 
@@ -72,18 +78,20 @@ const App: FC = () => {
         await axios.delete(
           `https://644155ed792fe886a8a4dd76.mockapi.io/cart/${findItem.id}`
         );
-        
+
         setCartItems((prev: CardInfo[]) =>
-          prev.filter((item: CardInfo) => Number(item.parentId) !== Number(obj.id))
+          prev.filter(
+            (item: CardInfo) => Number(item.parentId) !== Number(obj.id)
+          )
         );
       } else {
         setCartItems((prev: CardInfo[]) => [...prev, obj]);
-        const { data } = await axios.post<any>(
+        const { data } = await axios.post<CreateCardResponse>(
           "https://644155ed792fe886a8a4dd76.mockapi.io/cart",
           obj
         );
-        setCartItems((prev: any) =>
-          prev.map((item: any) => {
+        setCartItems((prev: CardInfo[]) =>
+          prev.map((item: CardInfo) => {
             if (item.parentId === data.parentId) {
               return { ...item, id: data.id };
             }
@@ -97,114 +105,68 @@ const App: FC = () => {
     }
   };
 
-  const onAddToFavorites = async (obj: CardInfo) => {
+  const onAddToFavorites = async (obj: CardInfo): Promise<void> => {
+    const findItem: CardInfo | undefined = favorites.find(
+      (favItem: CardInfo) => Number(favItem.parentId) === Number(obj.id)
+    );
+
     try {
-      if (
-        favorites.find(
-          (favObj: CardInfo) => Number(favObj.id) === Number(obj.id)
-        )
-      ) {
-        await axios.delete(
-          `https://644155ed792fe886a8a4dd76.mockapi.io/items/${Number(obj.id)}` // favorites
+      if (findItem) {
+        await axios.delete<DeleteCardResponse>(
+          `https://644155ed792fe886a8a4dd76.mockapi.io/items/${findItem.id}` // favorites
         );
         setFavorites((prev: CardInfo[]) =>
-          prev.filter((item) => Number(item.id) !== Number(obj.id))
+          prev.filter(
+            (item: CardInfo) => Number(item.parentId) !== Number(obj.id)
+          )
         );
-        return;
+      } else {
+        const { data } = await axios.post<CreateCardResponse>(
+          "https://644155ed792fe886a8a4dd76.mockapi.io/items", // favorites
+          obj
+        );
+        setFavorites((prev: CardInfo[]) => [...prev, data]);
       }
-      const { data } = await axios.post<any>(
-        "https://644155ed792fe886a8a4dd76.mockapi.io/items", // favorites
-        obj
-      );
-      setFavorites((prev: CardInfo[]) => [...prev, data]);
     } catch (error) {
       alert("Failed to remove/add to favorites");
       console.error(error);
     }
   };
 
-  const onChangeSearchInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChangeSearchInput = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ): void => {
     setSearchValue(e.target.value);
   };
 
-  const clearSearchValue = () => {
+  const clearSearchValue = (): void => {
     setSearchValue("");
   };
 
-  // const checkAdded = (id: number) => {
-  //   return cartItems.some((obj) => Number(obj.parentId) === Number(id));
-  // };
-
-  const checkAdded = useCallback(
-    (id: number) => {
-      return cartItems.some(
-        (obj: CardInfo) => Number(obj.parentId) === Number(id)
-      );
-    },
-    [cartItems]
-  );
-
-  const checkFavorite = (id: number) => {
-    return favorites.some(
-      (obj: CardInfo) => Number(obj.parentId) === Number(id)
-    );
+  const checkAdded = (id?: number, arr?: CardInfo[]): boolean => {
+    return !!arr?.some((obj: CardInfo) => Number(obj.parentId) === Number(id));
   };
 
-  const hideScrollbar = () => {
-    document.body.classList.toggle("hideScrollbar");
-  };
-
-  // const checkFavorite = useCallback(
-  //   (id: number) => {
-
-  //     return favorites.some(
-  //       (obj: CardInfo) => Number(obj.parentId) === Number(id)
-  //     );
-  //   },
-  //   [favorites]
-  // );
-
-  const fakeArr = [
-    {
-      id: 1,
-      title: "",
-      price: 0,
-      imageUrl: "",
-    },
-    {
-      id: 2,
-      title: "",
-      price: 0,
-      imageUrl: "",
-    },
-    {
-      id: 3,
-      title: "",
-      price: 0,
-      imageUrl: "",
-    },
-    {
-      id: 4,
-      title: "",
-      price: 0,
-      imageUrl: "",
-    },
+  const fakeArr: CardInfo[] = [
+    { id: 1, title: "", price: 0, imageUrl: "" },
+    { id: 2, title: "", price: 0, imageUrl: "" },
+    { id: 3, title: "", price: 0, imageUrl: "" },
+    { id: 4, title: "", price: 0, imageUrl: "" },
   ];
 
-  const getItemsToRender = (arr: []) => {
+  const getItemsToRender = (arr: CardInfo[]): CardInfo[] => {
     if (isLoading) return fakeArr;
     return arr;
   };
 
-  const onClickCart = () => {
-    setCartOpened(true);
-    hideScrollbar();
+  const hideScrollbar = (): void => {
+    document.body.classList.toggle("hideScrollbar");
   };
 
-  const onCloseCart = () => {
-    setCartOpened(false);
-    hideScrollbar()
-  }
+  const onClickCart = (condition: boolean): void => {
+    setCartOpened(condition);
+    hideScrollbar();
+  };
 
   return (
     <AppContext.Provider
@@ -213,7 +175,6 @@ const App: FC = () => {
         cartItems,
         favorites,
         checkAdded,
-        checkFavorite,
         getItemsToRender,
         setCartOpened,
         setCartItems,
@@ -223,11 +184,11 @@ const App: FC = () => {
         <Drawer
           items={cartItems}
           onRemoveItem={onRemoveCartItem}
-          onClose={() => onCloseCart()}
+          onClose={() => onClickCart(false)}
           opened={cartOpened}
         />
 
-        <Header onClickCart={onClickCart} />
+        <Header onClickCart={() => onClickCart(true)} />
 
         <Routes>
           <Route

@@ -1,24 +1,30 @@
-import { createContext } from "react";
+import { Dispatch, SetStateAction, createContext } from "react";
 import { CardInfo } from "../models";
 
-interface IAppContext {
+export interface IAppContext {
   items: CardInfo[];
   cartItems: CardInfo[];
   favorites: CardInfo[];
-  checkAdded: any;
-  checkFavorite: any;
-  getItemsToRender: any;
-  setCartOpened: any;
-  setCartItems: any;
+  checkAdded: (id?: number, arr?: CardInfo[]) => boolean;
+  getItemsToRender: (arr: CardInfo[]) => CardInfo[];
+  setCartOpened: Dispatch<SetStateAction<boolean>>;
+  setCartItems: Dispatch<SetStateAction<CardInfo[]>>;
+}
+
+const cardExample: CardInfo = {
+  id: 0,
+  parentId: 0,
+  title: "string",
+  price: 0,
+  imageUrl: "string",
 }
 
 export const AppContext = createContext<IAppContext>({
-  items: [],
-  cartItems: [],
-  favorites: [],
-  checkAdded: () => [],
-  checkFavorite: () => [],
-  getItemsToRender: () => [],
-  setCartOpened: () => [],
-  setCartItems: () => [],
+  items: [cardExample],
+  cartItems: [cardExample],
+  favorites: [cardExample],
+  checkAdded: () => false,
+  getItemsToRender: () => [cardExample],
+  setCartOpened: () => false,
+  setCartItems: () => [cardExample],
 });

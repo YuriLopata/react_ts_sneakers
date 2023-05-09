@@ -62,9 +62,12 @@
         align-items: center;
         border: 1px solid #dadada;
         border-radius: 20px;
-        margin-bottom: 20px;
-        padding: 10px 20px;
+        padding: 12px 20px;
         overflow: hidden;
+
+        &:not(:last-child) {
+            margin-bottom: 20px;
+        }
 
         img {
             margin-bottom: 14px;
