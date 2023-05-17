@@ -20,12 +20,12 @@ export const Card: FC<CardProps> = ({
   const itemObj: CardInfo = { id, parentId, title, price, imageUrl };
 
   const toggleLikeImg = checkAdded(itemObj.parentId, favorites)
-  ? "img/liked.svg"
-  : "img/unliked.svg"
+  ? "./img/liked.svg"
+  : "./img/unliked.svg"
 
   const toggleAddedImg = checkAdded(itemObj.parentId, cartItems)
-  ? "img/btn-checked.svg"
-  : "img/btn-plus.svg"
+  ? "./img/btn-checked.svg"
+  : "./img/btn-plus.svg"
 
   return (
     <div className={styles.card}>
