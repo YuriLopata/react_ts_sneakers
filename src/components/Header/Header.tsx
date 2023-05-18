@@ -10,7 +10,7 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
 
   return (
     <header className={styles.header}>
-      <Link to={"/"}>
+      <Link to={"/react_ts_sneakers"}>
         <div className={styles.logo}>
           <img className="mr-15" width={40} height={40} src="img/logo.png" />
   
@@ -33,7 +33,7 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
         </li>
 
         <span className="d-flex align-center">
-          <Link to={"/favorites"}>
+          <Link to={"/react_ts_sneakers/favorites"}>
             <li
               className="d-flex align-center ml-30"
             >
@@ -41,7 +41,7 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
             </li>
           </Link>
   
-          <Link to={"/orders"}>
+          <Link to={"/react_ts_sneakers/orders"}>
             <li className="d-flex align-center ml-30">
               <img width={20} height={20} src="./img/user.svg" />
             </li>
