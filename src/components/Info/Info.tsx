@@ -32,7 +32,7 @@ export const Info: FC<InfoProps> = ({ inCart, img, title, desc }) => {
           Go back
         </button>
       ) : (
-        <Link to={"/react_ts_sneakers/"}>
+        <Link to={"/"}>
           <button
             className={styles.greenButton}
             onClick={() => setCartOpened(false)}

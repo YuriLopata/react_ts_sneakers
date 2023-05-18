@@ -1,5 +1,3 @@
-@import '../../styles/variables.scss';
-
 .overlay {
     height: 100%;
     z-index: 1;
@@ -30,15 +28,11 @@
     flex-direction: column;
     position: absolute;
     right: 0;
-    background: $primary-light;
+    background: #ffffff;
     padding: 30px;
     box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
     transform: translateX(100%);
     transition: all 0.3s ease;
-
-    @media screen and (max-width: 420px) {
-        width: 100%;
-    }
 
     ::-webkit-scrollbar {
         width: 18px;
@@ -51,7 +45,7 @@
     }
 
     ::-webkit-scrollbar-thumb {
-        box-shadow: inset 0 0 10px 10px $secondary-light;
+        box-shadow: inset 0 0 10px 10px #dadada;
         border-right: solid 5px transparent;
         border-left: solid 5px transparent;
         border-radius: 10px;
@@ -66,7 +60,7 @@
     .cartItem {
         display: flex;
         align-items: center;
-        border: 1px solid $secondary-light;
+        border: 1px solid #dadada;
         border-radius: 20px;
         padding: 12px 20px;
         overflow: hidden;
@@ -115,8 +109,10 @@
     height: 100%;
     width: 100%;
     top: 0;
+    // right: 420px;
+    // bottom: 0;
     left: 0;
-    background-color: $shading;
+    background-color: rgba(0, 0, 0, 0.5);
 }
 
 .cartTotal {
@@ -133,7 +129,7 @@
             height: 1px;
             flex: 1;
             margin: 0 10px 3px 6px;
-            border: 1px dashed $secondary-lighta;
+            border: 1px dashed #dadada;
         }
     }
 }
@@ -144,8 +140,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background: $info-main;
-    color: $primary-light;
+    background: #9dd558;
+    color: #fff;
     padding: 18px;
     border: none;
     border-radius: 18px;
@@ -154,13 +150,13 @@
     cursor: pointer;
 
     &:disabled {
-        background-color: $secondary-main;
+        background-color: #bebebe;
 
         animation: button-loading 1s ease infinite;
 
         &:hover,
         &:focus {
-            background: $secondary-main;
+            background: #bebebe;
             cursor: default;
         }
 
@@ -173,13 +169,13 @@
         }
 
         &:active {
-            background: $secondary-main;
+            background: #bebebe;
         }
     }
 
     &:hover,
     &:focus {
-        background: lighten($info-main, 5%);
+        background: lighten(#9dd558, 5%);
     }
 
     &:hover .arrowRight {
@@ -191,7 +187,7 @@
     }
 
     &:active {
-        background: darken($info-main, 8%);
+        background: darken(#9dd558, 8%);
     }
 
     .arrowRight {
