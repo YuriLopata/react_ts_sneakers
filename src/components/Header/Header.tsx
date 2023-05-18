@@ -10,7 +10,7 @@ export const Header: FC<HeaderProps> = ({ onClickCart }) => {
 
   return (
     <header className={styles.header}>
-      <Link to={"/react_ts_sneakers"}>
+      <Link to={"/react_ts_sneakers/"}>
         <div className={styles.logo}>
           <img className="mr-15" width={40} height={40} src="img/logo.png" />
   
