@@ -192,7 +192,7 @@ const App: FC = () => {
 
         <Routes>
           <Route
-            path="/"
+            path="/react_ts_sneakers"
             element={
               <Home
                 items={items}
@@ -207,7 +207,7 @@ const App: FC = () => {
           ></Route>
 
           <Route
-            path="/favorites"
+            path="/react_ts_sneakers/favorites"
             element={
               <Favorites
                 onAddToCart={onAddToCart}
@@ -218,7 +218,7 @@ const App: FC = () => {
           ></Route>
 
           <Route
-            path="/orders"
+            path="/react_ts_sneakers/orders"
             element={
               <Orders
                 onAddToCart={onAddToCart}
