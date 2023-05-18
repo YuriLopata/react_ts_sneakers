@@ -192,7 +192,7 @@ const App: FC = () => {
 
         <Routes>
           <Route
-            path="/react_ts_sneakers"
+            path="/react_ts_sneakers/"
             element={
               <Home
                 items={items}
