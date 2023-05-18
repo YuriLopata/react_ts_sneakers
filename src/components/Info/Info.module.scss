@@ -1,3 +1,5 @@
+@import '../../styles/variables.scss';
+
 .cartEmpty {
     display: flex;
     flex-direction: column;
@@ -22,8 +24,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        background: #9dd558;
-        color: #fff;
+        background: $info-main;
+        color: $primary-light;
         padding: 18px;
         border: none;
         border-radius: 18px;
@@ -34,7 +36,7 @@
 
         &:hover,
         &:focus {
-            background: lighten(#9dd558, 5%);
+            background: lighten($info-main, 5%);
         }
 
         &:hover .arrowLeft {
@@ -46,7 +48,7 @@
         }
 
         &:active {
-            background: darken(#9dd558, 8%);
+            background: darken($info-main, 8%);
         }
 
         .arrowLeft {
